@@ -1,5 +1,5 @@
 function love.load()
-
+    num = 1
 end
 
 function love.update()
