@@ -12,8 +12,8 @@ function love.load()
     player = Character()
 end
 
-function love.update()
-
+function love.update(dt)
+    player:update(dt)
 end
 
 function love.draw()
@@ -25,7 +25,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if key == "w" or key == "a" or key == "s" or key == "d" then
+    if (key == "w" or key == "a" or key == "s" or key == "d") and player.movement_direction == "none" then
         player:move(key)
     end
 end

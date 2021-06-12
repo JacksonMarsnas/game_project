@@ -2,7 +2,7 @@ Map1 = Map:extend()
 
 function Map1:new()
     Map1.super.new(self)
-    self.tilemap = {
+    tilemap = {
         {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
         {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
@@ -26,7 +26,7 @@ function Map1:update()
 end
 
 function Map1:draw()
-    for row_number, row_info in ipairs(self.tilemap) do
+    for row_number, row_info in ipairs(tilemap) do
         for tile_number, tile_info in ipairs(row_info) do
             love.graphics.draw(grass, grass_frames[tile_info], tile_number * 64 - 64, row_number * 64 - 64)
         end
