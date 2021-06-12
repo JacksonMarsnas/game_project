@@ -13,8 +13,8 @@ function Character:new()
 
     self.x = 128
     self.y = 128
-    self.current_x = self.x / 64 + 1
-    self.current_y = self.y / 64 + 1
+    self.current_x_tile = self.x / 64 + 1
+    self.current_y_tile = self.y / 64 + 1
 end
 
 function Character:draw()
@@ -26,17 +26,17 @@ function Character:update()
 end
 
 function Character:move(key)
-    if key == "w" and self.current_y > 1 and (map1.tilemap[self.current_y - 1][self.current_x] == 1 or map1.tilemap[self.current_y - 1][self.current_x] == 2) then
+    if key == "w" and self.current_y_tile > 1 and (map1.tilemap[self.current_y_tile - 1][self.current_x_tile] == 1 or map1.tilemap[self.current_y_tile - 1][self.current_x_tile] == 2) then
         self.y = self.y - 64
-        self.current_y = self.y / 64 + 1
-    elseif key == "s" and self.current_y < 15 and (map1.tilemap[self.current_y + 1][self.current_x] == 1 or map1.tilemap[self.current_y + 1][self.current_x] == 2) then
+        self.current_y_tile = self.y / 64 + 1
+    elseif key == "s" and self.current_y_tile < 15 and (map1.tilemap[self.current_y_tile + 1][self.current_x_tile] == 1 or map1.tilemap[self.current_y_tile + 1][self.current_x_tile] == 2) then
         self.y = self.y + 64
-        self.current_y = self.y / 64 + 1
-    elseif key == "a" and self.current_x > 1 and (map1.tilemap[self.current_y][self.current_x - 1] == 1 or map1.tilemap[self.current_y][self.current_x - 1] == 2) then
+        self.current_y_tile = self.y / 64 + 1
+    elseif key == "a" and self.current_x_tile > 1 and (map1.tilemap[self.current_y_tile][self.current_x_tile - 1] == 1 or map1.tilemap[self.current_y_tile][self.current_x_tile - 1] == 2) then
         self.x = self.x - 64
-        self.current_x = self.x / 64 + 1
-    elseif key == "d" and self.current_x < 15 and (map1.tilemap[self.current_y][self.current_x + 1] == 1 or map1.tilemap[self.current_y][self.current_x + 1] == 2) then
+        self.current_x_tile = self.x / 64 + 1
+    elseif key == "d" and self.current_x_tile < 15 and (map1.tilemap[self.current_y_tile][self.current_x_tile + 1] == 1 or map1.tilemap[self.current_y_tile][self.current_x_tile + 1] == 2) then
         self.x = self.x + 64
-        self.current_x = self.x / 64 + 1
+        self.current_x_tile = self.x / 64 + 1
     end
 end
