@@ -14,6 +14,8 @@ function Enemy1:new(starting_x, starting_y)
     self.y = starting_y
     self.current_x = self.x / 64 + 1
     self.current_y = self.y / 64 + 1
+
+    occupation_map[self.current_y][self.current_x] = true
 end
 
 function Enemy1:draw()

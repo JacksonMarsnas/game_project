@@ -37,19 +37,19 @@ function Character:update(dt)
 end
 
 function Character:move(key)
-    if key == "w" and self.current_y_tile > 1 and (tilemap[self.current_y_tile - 1][self.current_x_tile] == 1 or tilemap[self.current_y_tile - 1][self.current_x_tile] == 2) then
+    if key == "w" and self.current_y_tile > 1 and self:check_occupation(0, -1) == true then
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile - 1
         self.movement_direction = "up"
-    elseif key == "s" and self.current_y_tile < 15 and (tilemap[self.current_y_tile + 1][self.current_x_tile] == 1 or tilemap[self.current_y_tile + 1][self.current_x_tile] == 2) then
+    elseif key == "s" and self.current_y_tile < 15 and self:check_occupation(0, 1) == true then
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile + 1
         self.movement_direction = "down"
-    elseif key == "a" and self.current_x_tile > 1 and (tilemap[self.current_y_tile][self.current_x_tile - 1] == 1 or tilemap[self.current_y_tile][self.current_x_tile - 1] == 2) then
+    elseif key == "a" and self.current_x_tile > 1 and self:check_occupation(-1, 0) == true then
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile - 1
         self.movement_direction = "left"
-    elseif key == "d" and self.current_x_tile < 15 and (tilemap[self.current_y_tile][self.current_x_tile + 1] == 1 or tilemap[self.current_y_tile][self.current_x_tile + 1] == 2) then
+    elseif key == "d" and self.current_x_tile < 15 and self:check_occupation(1, 0) == true then
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile + 1
         self.movement_direction = "right"
@@ -119,4 +119,14 @@ function Character:create_animations()
         walking_down = {131, 132, 133, 134, 135, 136, 137, 138, 139},
         walking_right = {144, 145, 146, 147, 148, 149, 150, 151, 152}
     }
+end
+
+function Character:check_occupation(x_offset, y_offset)
+    if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 then
+        return false
+    elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
+        return false
+    else
+        return true
+    end
 end
