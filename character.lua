@@ -26,19 +26,19 @@ function Character:draw()
     love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
 end
 
-function Character:update(dt)
+function Character:update(dt, current_enemies)
     self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
     if self.current_frame > #self.animations[self.animation_state] then
         self.current_frame = 1
     end
     if self.movement_animation ~= "none" then
-        self:movement_animation(dt)
+        self:movement_animation(dt, current_enemies)
     end
 end
 
 function Character:move(key)
     if key == "w" and self.current_y_tile > 1 and self:check_occupation(0, -1) == true then
-        self:change_movement_animation(key)
+        self:change_movement_animation(key, current_enemies)
         self.next_y_tile = self.current_y_tile - 1
         self.movement_direction = "up"
     elseif key == "s" and self.current_y_tile < 15 and self:check_occupation(0, 1) == true then
@@ -68,7 +68,7 @@ function Character:change_movement_animation(key)
     end
 end
 
-function Character:movement_animation(dt)
+function Character:movement_animation(dt, current_enemies)
     if self.movement_direction == "up" and self.y >= (self.next_y_tile - 1) * 64 then
         self.y = self.y - 100 * dt
         if self.y <= (self.next_y_tile - 1) * 64 then
@@ -77,6 +77,10 @@ function Character:movement_animation(dt)
             self.movement_direction = "none"
             self.current_frame = 1
             self.animation_state = "idle_up"
+
+            for index, enemy in ipairs(current_enemies) do
+                enemy:move(self.current_x_tile, self.current_y_tile)
+            end
         end
     elseif self.movement_direction == "down" and self.y <= (self.next_y_tile - 1) * 64 then
         self.y = self.y + 100 * dt
@@ -86,6 +90,10 @@ function Character:movement_animation(dt)
             self.movement_direction = "none"
             self.current_frame = 1
             self.animation_state = "idle_down"
+
+            for index, enemy in ipairs(current_enemies) do
+                enemy:move(self.current_x_tile, self.current_y_tile)
+            end
         end
     elseif self.movement_direction == "left" and self.x >= (self.next_x_tile - 1) * 64 then
         self.x = self.x - 100 * dt
@@ -95,6 +103,10 @@ function Character:movement_animation(dt)
             self.movement_direction = "none"
             self.current_frame = 1
             self.animation_state = "idle_left"
+
+            for index, enemy in ipairs(current_enemies) do
+                enemy:move(self.current_x_tile, self.current_y_tile)
+            end
         end
     elseif self.movement_direction == "right" and self.x <= (self.next_x_tile - 1) * 64 then
         self.x = self.x + 100 * dt
@@ -104,6 +116,10 @@ function Character:movement_animation(dt)
             self.movement_direction = "none"
             self.current_frame = 1
             self.animation_state = "idle_right"
+
+            for index, enemy in ipairs(current_enemies) do
+                enemy:move(self.current_x_tile, self.current_y_tile)
+            end
         end
     end
 end

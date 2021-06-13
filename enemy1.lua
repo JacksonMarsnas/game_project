@@ -21,3 +21,28 @@ end
 function Enemy1:draw()
     love.graphics.draw(enemy1_sheet, enemy1_frames[1], self.x, self.y)
 end
+
+function Enemy1:move(player_x_tile, player_y_tile)
+    local x_difference = self.current_x - player_x_tile
+    local y_difference = self.current_y - player_y_tile
+
+    if (math.abs(x_difference) == 1 and math.abs(y_difference) == 0) or (math.abs(y_difference) == 1 and math.abs(x_difference) == 0) then
+        --attack
+    elseif math.abs(x_difference) > math.abs(y_difference) then
+        if x_difference < 0 then
+            self.x = self.x + 64
+            self.current_x = self.current_x + 1
+        else
+            self.x = self.x - 64
+            self.current_x = self.current_x - 1
+        end
+    else
+        if y_difference < 0 then
+            self.y = self.y + 64
+            self.current_y = self.current_y + 1
+        else
+            self.y = self.y - 64
+            self.current_y = self.current_y - 1
+        end
+    end
+end

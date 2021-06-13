@@ -14,7 +14,7 @@ function love.load()
 end
 
 function love.update(dt)
-    player:update(dt)
+    player:update(dt, map1.enemies)
 end
 
 function love.draw()
