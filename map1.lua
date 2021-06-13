@@ -19,6 +19,11 @@ function Map1:new()
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
         {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1}
     }
+
+    self.enemies = {
+        Enemy1(640, 640),
+        Enemy1(128, 192)
+    }
 end
 
 function Map1:update()
@@ -30,5 +35,9 @@ function Map1:draw()
         for tile_number, tile_info in ipairs(row_info) do
             love.graphics.draw(grass, grass_frames[tile_info], tile_number * 64 - 64, row_number * 64 - 64)
         end
+    end
+
+    for index, enemy in ipairs(self.enemies) do
+        enemy:draw()
     end
 end

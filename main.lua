@@ -3,13 +3,14 @@ function love.load()
     require "map"
     require "map1"
     require "character"
+    require "enemy"
+    require "enemy1"
     window_width = 960
     window_height = 960
     love.window.setMode(window_width, window_height)
-    tester = false
 
-    map1 = Map1()
     player = Character()
+    map1 = Map1()
 end
 
 function love.update(dt)
@@ -19,9 +20,6 @@ end
 function love.draw()
     map1:draw()
     player:draw()
-    if tester == true then
-        love.graphics.rectangle("fill", 128, 192, 64, 64)
-    end
 end
 
 function love.keypressed(key)
