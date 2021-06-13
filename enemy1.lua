@@ -25,24 +25,67 @@ end
 function Enemy1:move(player_x_tile, player_y_tile)
     local x_difference = self.current_x - player_x_tile
     local y_difference = self.current_y - player_y_tile
+    occupation_map[self.current_y][self.current_x] = false
 
     if (math.abs(x_difference) == 1 and math.abs(y_difference) == 0) or (math.abs(y_difference) == 1 and math.abs(x_difference) == 0) then
         --attack
     elseif math.abs(x_difference) > math.abs(y_difference) then
         if x_difference < 0 then
-            self.x = self.x + 64
-            self.current_x = self.current_x + 1
-        else
-            self.x = self.x - 64
-            self.current_x = self.current_x - 1
+            if self:check_occupation(1, 0) == true then
+                self.x = self.x + 64
+                self.current_x = self.current_x + 1
+            elseif y_difference < 0 and self:check_occupation(0, 1) == true then
+                self.y = self.y + 64
+                self.current_y = self.current_y + 1
+            elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
+                self.y = self.y - 64
+                self.current_y = self.current_y - 1
+            end
+        elseif x_difference >= 0 then
+            if self:check_occupation(-1, 0) == true then
+                self.x = self.x - 64
+                self.current_x = self.current_x - 1
+            elseif y_difference < 0 and self:check_occupation(0, 1) == true then
+                self.y = self.y + 64
+                self.current_y = self.current_y + 1
+            elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
+                self.y = self.y - 64
+                self.current_y = self.current_y - 1
+            end
         end
     else
         if y_difference < 0 then
-            self.y = self.y + 64
-            self.current_y = self.current_y + 1
-        else
-            self.y = self.y - 64
-            self.current_y = self.current_y - 1
+            if self:check_occupation(0, 1) == true then
+                self.y = self.y + 64
+                self.current_y = self.current_y + 1
+            elseif x_difference < 0 and self:check_occupation(1, 0) == true then
+                self.x = self.x + 64
+                self.current_x = self.current_x + 1
+            elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
+                self.x = self.x - 64
+                self.current_x = self.current_x - 1
+            end
+        elseif y_difference >= 0 then
+            if self:check_occupation(0, -1) == true then
+                self.y = self.y - 64
+                self.current_y = self.current_y - 1
+            elseif x_difference < 0 and self:check_occupation(1, 0) == true then
+                self.x = self.x + 64
+                self.current_x = self.current_x + 1
+            elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
+                self.x = self.x - 64
+                self.current_x = self.current_x - 1
+            end
         end
     end
+    occupation_map[self.current_y][self.current_x] = true
+end
+
+function Enemy1:check_occupation(x_offset, y_offset)
+    if tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 1 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 2 then
+        return false
+    elseif occupation_map[self.current_y + y_offset][self.current_x + x_offset] == true then
+        return false
+    end
+    return true
 end
