@@ -22,7 +22,7 @@ function Enemy1:draw()
     love.graphics.draw(enemy1_sheet, enemy1_frames[1], self.x, self.y)
 end
 
-function Enemy1:move(player_x_tile, player_y_tile)
+function Enemy1:begin_turn(player_x_tile, player_y_tile)
     local x_difference = self.current_x - player_x_tile
     local y_difference = self.current_y - player_y_tile
     occupation_map[self.current_y][self.current_x] = false

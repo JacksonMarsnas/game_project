@@ -6,7 +6,7 @@ function love.load()
     require "enemy"
     require "enemy1"
     window_width = 960
-    window_height = 960
+    window_height = 1024
     love.window.setMode(window_width, window_height)
 
     player = Character()

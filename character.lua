@@ -20,10 +20,16 @@ function Character:new()
     self.current_frame = 1
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
+    self.max_health = 100
+    self.health = 100
 end
 
 function Character:draw()
     love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", 20, 980, self.health / self.max_health * 256, 16)
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(self.health .. " HP", 20, 980)
 end
 
 function Character:update(dt, current_enemies)
@@ -79,7 +85,7 @@ function Character:movement_animation(dt, current_enemies)
             self.animation_state = "idle_up"
 
             for index, enemy in ipairs(current_enemies) do
-                enemy:move(self.current_x_tile, self.current_y_tile)
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
     elseif self.movement_direction == "down" and self.y <= (self.next_y_tile - 1) * 64 then
@@ -92,7 +98,7 @@ function Character:movement_animation(dt, current_enemies)
             self.animation_state = "idle_down"
 
             for index, enemy in ipairs(current_enemies) do
-                enemy:move(self.current_x_tile, self.current_y_tile)
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
     elseif self.movement_direction == "left" and self.x >= (self.next_x_tile - 1) * 64 then
@@ -105,7 +111,7 @@ function Character:movement_animation(dt, current_enemies)
             self.animation_state = "idle_left"
 
             for index, enemy in ipairs(current_enemies) do
-                enemy:move(self.current_x_tile, self.current_y_tile)
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
     elseif self.movement_direction == "right" and self.x <= (self.next_x_tile - 1) * 64 then
@@ -118,7 +124,7 @@ function Character:movement_animation(dt, current_enemies)
             self.animation_state = "idle_right"
 
             for index, enemy in ipairs(current_enemies) do
-                enemy:move(self.current_x_tile, self.current_y_tile)
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
     end
