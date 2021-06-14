@@ -34,8 +34,23 @@ end
 
 function Character:update(dt, current_enemies)
     self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
-    if self.current_frame > #self.animations[self.animation_state] then
+    if self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == true then
         self.current_frame = 1
+    elseif self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == false then
+        if self.movement_direction == "attacking_up" then
+            self.animation_state = "idle_up"
+        elseif self.movement_direction == "attacking_down" then
+            self.animation_state = "idle_down"
+        elseif self.movement_direction == "attacking_left" then
+            self.animation_state = "idle_left"
+        elseif self.movement_direction == "attacking_right" then
+            self.animation_state = "idle_right"
+        end
+        self.current_frame = 1
+        self.movement_direction = "none"
+        for index, enemy in ipairs(current_enemies) do
+            enemy:begin_turn(self.current_x_tile, self.current_y_tile)
+        end
     end
     if self.movement_animation ~= "none" then
         self:movement_animation(dt, current_enemies)
@@ -44,7 +59,7 @@ end
 
 function Character:move(key)
     if key == "w" and self.current_y_tile > 1 and self:check_occupation(0, -1) == true then
-        self:change_movement_animation(key, current_enemies)
+        self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile - 1
         self.movement_direction = "up"
     elseif key == "s" and self.current_y_tile < 14 and self:check_occupation(0, 1) == true then
@@ -71,6 +86,14 @@ function Character:change_movement_animation(key)
         self.animation_state = "walking_left"
     elseif key == "d" then
         self.animation_state = "walking_right"
+    elseif key == "up" then
+        self.animation_state = "attacking_up"
+    elseif key == "down" then
+        self.animation_state = "attacking_down"
+    elseif key == "left" then
+        self.animation_state = "attacking_left"
+    elseif key == "right" then
+        self.animation_state = "attacking_right"
     end
 end
 
@@ -130,6 +153,17 @@ function Character:movement_animation(dt, current_enemies)
     end
 end
 
+function Character:attack(key, x_offset, y_offset, current_enemies)
+    self:change_movement_animation(key)
+    self.movement_direction = "attacking_" .. key
+
+    for index, enemy in ipairs(current_enemies) do
+        if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
+            enemy.health = enemy.health - 50
+        end
+    end
+end
+
 function Character:create_animations()
     return {
         idle_up = {105},
@@ -139,7 +173,11 @@ function Character:create_animations()
         walking_up = {105, 106, 107, 108, 109, 110, 111, 112, 113},
         walking_left = {118, 119, 120, 121, 122, 123, 124, 125, 126},
         walking_down = {131, 132, 133, 134, 135, 136, 137, 138, 139},
-        walking_right = {144, 145, 146, 147, 148, 149, 150, 151, 152}
+        walking_right = {144, 145, 146, 147, 148, 149, 150, 151, 152},
+        attacking_up = {157, 158, 159, 160, 161, 162, 162, 162},
+        attacking_left = {170, 171, 172, 173, 174, 175, 175, 175},
+        attacking_down = {183, 184, 185, 186, 187, 188, 188, 188},
+        attacking_right = {196, 197, 198, 199, 200, 201, 201, 201}
     }
 end
 
@@ -151,4 +189,11 @@ function Character:check_occupation(x_offset, y_offset)
     else
         return true
     end
+end
+
+function Character:animation_loop()
+    if self.movement_direction == "attacking_up" or self.movement_direction == "attacking_down" or self.movement_direction == "attacking_left" or self.movement_direction == "attacking_right" then
+        return false
+    end
+    return true 
 end
