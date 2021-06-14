@@ -10,8 +10,14 @@ function Enemy1:new(starting_x, starting_y)
             table.insert(enemy1_frames, love.graphics.newQuad(j * sprite_dimensions, i * sprite_dimensions, sprite_dimensions, sprite_dimensions, enemy1_sheet:getWidth(), enemy1_sheet:getHeight()))
         end
     end
+
+    self.max_health = 100
+    self.health = self.max_health
 end
 
 function Enemy1:draw()
     love.graphics.draw(enemy1_sheet, enemy1_frames[1], self.x, self.y)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", self.x, self.y + 64, self.health / self.max_health * 66, 5)
+    love.graphics.setColor(1, 1, 1)
 end
