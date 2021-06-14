@@ -33,6 +33,13 @@ function Character:draw()
 end
 
 function Character:update(dt, current_enemies)
+    self:cycle_frames(dt, current_enemies)
+    if self.movement_animation ~= "none" then
+        self:movement_animation(dt, current_enemies)
+    end
+end
+
+function Character:cycle_frames(dt, current_enemies)
     self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
     if self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == true then
         self.current_frame = 1
@@ -51,9 +58,6 @@ function Character:update(dt, current_enemies)
         for index, enemy in ipairs(current_enemies) do
             enemy:begin_turn(self.current_x_tile, self.current_y_tile)
         end
-    end
-    if self.movement_animation ~= "none" then
-        self:movement_animation(dt, current_enemies)
     end
 end
 

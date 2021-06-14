@@ -19,6 +19,9 @@ end
 
 function love.update(dt)
     player:update(dt, map1.enemies)
+    for index, enemy in ipairs(map1.enemies) do
+        enemy:update(dt)
+    end
 end
 
 function love.draw()
@@ -27,17 +30,26 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if (key == "w" or key == "a" or key == "s" or key == "d") and player.movement_direction == "none" then
-        player:move(key)
-    elseif (key == "up" or key == "down" or key == "left" or key == "right") and player.movement_direction == "none" then
-        if key == "up" then
-            player:attack(key, 0, -1, map1.enemies)
-        elseif key == "down" then
-            player:attack(key, 0, 1, map1.enemies)
-        elseif key == "left" then
-            player:attack(key, -1, 0, map1.enemies)
-        elseif key == "right" then
-            player:attack(key, 1, 0, map1.enemies)
+    local allow_player_action = true
+    for index, enemy in ipairs(map1.enemies) do
+        if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" then
+            allow_player_action = false
+        end
+    end
+
+    if allow_player_action == true then
+        if (key == "w" or key == "a" or key == "s" or key == "d") and player.movement_direction == "none" then
+            player:move(key)
+        elseif (key == "up" or key == "down" or key == "left" or key == "right") and player.movement_direction == "none" then
+            if key == "up" then
+                player:attack(key, 0, -1, map1.enemies)
+            elseif key == "down" then
+                player:attack(key, 0, 1, map1.enemies)
+            elseif key == "left" then
+                player:attack(key, -1, 0, map1.enemies)
+            elseif key == "right" then
+                player:attack(key, 1, 0, map1.enemies)
+            end
         end
     end
 end
