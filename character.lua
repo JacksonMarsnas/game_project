@@ -27,9 +27,9 @@ end
 function Character:draw()
     love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 20, 980, self.health / self.max_health * 256, 16)
+    love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print(self.health .. " HP", 20, 980)
+    love.graphics.print(self.health .. " HP", 20, 930)
 end
 
 function Character:update(dt, current_enemies)
@@ -47,7 +47,7 @@ function Character:move(key)
         self:change_movement_animation(key, current_enemies)
         self.next_y_tile = self.current_y_tile - 1
         self.movement_direction = "up"
-    elseif key == "s" and self.current_y_tile < 15 and self:check_occupation(0, 1) == true then
+    elseif key == "s" and self.current_y_tile < 14 and self:check_occupation(0, 1) == true then
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile + 1
         self.movement_direction = "down"

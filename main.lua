@@ -6,8 +6,12 @@ function love.load()
     require "enemy"
     require "enemy1"
     window_width = 960
-    window_height = 1024
+    window_height = 1000
     love.window.setMode(window_width, window_height)
+
+    local myFont = love.graphics.newFont( "ARCADECLASSIC.TTF", 32)
+    myFont:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(myFont)
 
     player = Character()
     map1 = Map1()
