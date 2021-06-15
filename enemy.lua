@@ -65,7 +65,7 @@ function Enemy:move(dt)
 end
 
 function Enemy:begin_turn(player_x_tile, player_y_tile)
-    if self.health > 0 then
+    if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile) == true then
         local x_difference = self.current_x - player_x_tile
         local y_difference = self.current_y - player_y_tile
         occupation_map[self.current_y][self.current_x] = false
@@ -152,4 +152,11 @@ function Enemy:create_animations()
         attacking_right = {196, 197, 198, 199, 200, 201, 201, 201},
         dead = {261, 262, 263, 264, 265, 266}
     }
+end
+
+function Enemy:check_aggro_range(player_x_tile, player_y_tile)
+    if math.abs(self.current_x - player_x_tile) + math.abs(self.current_y - player_y_tile) <= 5 then
+        return true
+    end
+    return false
 end
