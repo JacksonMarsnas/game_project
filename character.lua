@@ -11,7 +11,7 @@ function Character:new()
         end
     end
 
-    self.movement_direction = "none"
+    self.current_action = "none"
     self.x = 128
     self.y = 128
     self.current_x_tile = self.x / 64 + 1
@@ -22,14 +22,18 @@ function Character:new()
     self.animation_state = "idle_down"
     self.max_health = 100
     self.health = 100
+    self.current_map = "map_1"
+    self.stop_drawing = false
 end
 
 function Character:draw()
-    love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.print(self.health .. " HP", 20, 930)
+    if self.stop_drawing ~= true then
+        love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.print(self.health .. " HP", 20, 930)
+    end
 end
 
 function Character:update(dt, current_enemies)
@@ -44,17 +48,20 @@ function Character:cycle_frames(dt, current_enemies)
     if self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == true then
         self.current_frame = 1
     elseif self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == false then
-        if self.movement_direction == "attacking_up" then
+        if self.current_action == "attacking_up" then
             self.animation_state = "idle_up"
-        elseif self.movement_direction == "attacking_down" then
+        elseif self.current_action == "attacking_down" then
             self.animation_state = "idle_down"
-        elseif self.movement_direction == "attacking_left" then
+        elseif self.current_action == "attacking_left" then
             self.animation_state = "idle_left"
-        elseif self.movement_direction == "attacking_right" then
+        elseif self.current_action == "attacking_right" then
             self.animation_state = "idle_right"
+        elseif self.current_action == "dying" then
+            self.stop_drawing = true
+            self.current_map = "death_screen"
         end
         self.current_frame = 1
-        self.movement_direction = "none"
+        self.current_action = "none"
         for index, enemy in ipairs(current_enemies) do
             enemy:begin_turn(self.current_x_tile, self.current_y_tile)
         end
@@ -65,19 +72,19 @@ function Character:move(key)
     if key == "w" and self.current_y_tile > 1 and self:check_occupation(0, -1) == true then
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile - 1
-        self.movement_direction = "up"
+        self.current_action = "walking_up"
     elseif key == "s" and self.current_y_tile < 14 and self:check_occupation(0, 1) == true then
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile + 1
-        self.movement_direction = "down"
+        self.current_action = "walking_down"
     elseif key == "a" and self.current_x_tile > 1 and self:check_occupation(-1, 0) == true then
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile - 1
-        self.movement_direction = "left"
+        self.current_action = "walking_left"
     elseif key == "d" and self.current_x_tile < 15 and self:check_occupation(1, 0) == true then
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile + 1
-        self.movement_direction = "right"
+        self.current_action = "walking_right"
     end
 end
 
@@ -102,12 +109,12 @@ function Character:change_movement_animation(key)
 end
 
 function Character:movement_animation(dt, current_enemies)
-    if self.movement_direction == "up" and self.y >= (self.next_y_tile - 1) * 64 then
+    if self.current_action == "walking_up" and self.y >= (self.next_y_tile - 1) * 64 then
         self.y = self.y - 100 * dt
         if self.y <= (self.next_y_tile - 1) * 64 then
             self.y = (self.next_y_tile - 1) * 64
             self.current_y_tile = self.y / 64 + 1
-            self.movement_direction = "none"
+            self.current_action = "none"
             self.current_frame = 1
             self.animation_state = "idle_up"
 
@@ -115,12 +122,12 @@ function Character:movement_animation(dt, current_enemies)
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
-    elseif self.movement_direction == "down" and self.y <= (self.next_y_tile - 1) * 64 then
+    elseif self.current_action == "walking_down" and self.y <= (self.next_y_tile - 1) * 64 then
         self.y = self.y + 100 * dt
         if self.y >= (self.next_y_tile - 1) * 64 then
             self.y = (self.next_y_tile - 1) * 64
             self.current_y_tile = self.y / 64 + 1
-            self.movement_direction = "none"
+            self.current_action = "none"
             self.current_frame = 1
             self.animation_state = "idle_down"
 
@@ -128,12 +135,12 @@ function Character:movement_animation(dt, current_enemies)
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
-    elseif self.movement_direction == "left" and self.x >= (self.next_x_tile - 1) * 64 then
+    elseif self.current_action == "walking_left" and self.x >= (self.next_x_tile - 1) * 64 then
         self.x = self.x - 100 * dt
         if self.x <= (self.next_x_tile - 1) * 64 then
             self.x = (self.next_x_tile - 1) * 64
             self.current_x_tile = self.x / 64 + 1
-            self.movement_direction = "none"
+            self.current_action = "none"
             self.current_frame = 1
             self.animation_state = "idle_left"
 
@@ -141,12 +148,12 @@ function Character:movement_animation(dt, current_enemies)
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
         end
-    elseif self.movement_direction == "right" and self.x <= (self.next_x_tile - 1) * 64 then
+    elseif self.current_action == "walking_right" and self.x <= (self.next_x_tile - 1) * 64 then
         self.x = self.x + 100 * dt
         if self.x >= (self.next_x_tile - 1) * 64 then
             self.x = (self.next_x_tile - 1) * 64
             self.current_x_tile = self.x / 64 + 1
-            self.movement_direction = "none"
+            self.current_action = "none"
             self.current_frame = 1
             self.animation_state = "idle_right"
 
@@ -159,7 +166,7 @@ end
 
 function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
-    self.movement_direction = "attacking_" .. key
+    self.current_action = "attacking_" .. key
 
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
@@ -186,7 +193,8 @@ function Character:create_animations()
         attacking_up = {157, 158, 159, 160, 161, 162, 162, 162},
         attacking_left = {170, 171, 172, 173, 174, 175, 175, 175},
         attacking_down = {183, 184, 185, 186, 187, 188, 188, 188},
-        attacking_right = {196, 197, 198, 199, 200, 201, 201, 201}
+        attacking_right = {196, 197, 198, 199, 200, 201, 201, 201},
+        dying = {261, 262, 263, 264, 265, 266}
     }
 end
 
@@ -201,7 +209,7 @@ function Character:check_occupation(x_offset, y_offset)
 end
 
 function Character:animation_loop()
-    if self.movement_direction == "attacking_up" or self.movement_direction == "attacking_down" or self.movement_direction == "attacking_left" or self.movement_direction == "attacking_right" then
+    if self.current_action == "attacking_up" or self.current_action == "attacking_down" or self.current_action == "attacking_left" or self.current_action == "attacking_right" or self.current_action == "dying" then
         return false
     end
     return true 
@@ -209,4 +217,9 @@ end
 
 function Character:take_damage()
     self.health = self.health - 20
+    if self.health <= 0 then
+        self.health = 0
+        self.current_action = "dying"
+        self.animation_state = "dying"
+    end
 end

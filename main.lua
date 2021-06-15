@@ -5,6 +5,8 @@ function love.load()
     require "character"
     require "enemy"
     require "enemy1"
+    require"death"
+
     window_width = 960
     window_height = 1000
     love.window.setMode(window_width, window_height)
@@ -15,6 +17,13 @@ function love.load()
 
     player = Character()
     map1 = Map1()
+    death = Death()
+
+    all_maps = {
+        death_screen = death,
+        map_1 = map1
+    }
+    current_map = all_maps[map1]
 end
 
 function love.update(dt)
@@ -25,7 +34,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    map1:draw()
+    all_maps[player.current_map]:draw()
     player:draw()
 end
 
@@ -38,9 +47,9 @@ function love.keypressed(key)
     end
 
     if allow_player_action == true then
-        if (key == "w" or key == "a" or key == "s" or key == "d") and player.movement_direction == "none" then
+        if (key == "w" or key == "a" or key == "s" or key == "d") and player.current_action == "none" then
             player:move(key)
-        elseif (key == "up" or key == "down" or key == "left" or key == "right") and player.movement_direction == "none" then
+        elseif (key == "up" or key == "down" or key == "left" or key == "right") and player.current_action == "none" then
             if key == "up" then
                 player:attack(key, 0, -1, map1.enemies)
             elseif key == "down" then

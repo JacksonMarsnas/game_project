@@ -30,6 +30,7 @@ function Enemy:animation_cycle(dt)
     if self.current_frame > #self.animations[self.animation_state] then
         self.current_frame = 1
         if self.animation_state == "attacking_up" or self.animation_state == "attacking_down" or self.animation_state == "attacking_left" or self.animation_state == "attacking_right" then
+            player:take_damage()
             if self.animation_state == "attacking_up" then
                 self.animation_state = "idle_up"
             elseif self.animation_state == "attacking_down" then
@@ -141,7 +142,6 @@ function Enemy:begin_turn(player_x_tile, player_y_tile)
 end
 
 function Enemy:attack(x_difference, y_difference)
-    player:take_damage()
     if y_difference == 1 then
         self.animation_state = "attacking_up"
     elseif y_difference == -1 then
