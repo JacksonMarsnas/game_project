@@ -206,3 +206,7 @@ function Character:animation_loop()
     end
     return true 
 end
+
+function Character:take_damage()
+    self.health = self.health - 20
+end

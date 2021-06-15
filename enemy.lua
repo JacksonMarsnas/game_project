@@ -14,16 +14,31 @@ end
 
 function Enemy:update(dt)
     if self.health > 0 then
+        self:animation_cycle(dt)
         if self.animation_state == "walking_up" or self.animation_state == "walking_down" or self.animation_state == "walking_left" or self.animation_state == "walking_right" then
             self:move(dt)
-        end
-        self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
-        if self.current_frame > #self.animations[self.animation_state] then
-            self.current_frame = 1
         end
     else
         if self.current_frame < 5 then
             self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
+        end
+    end
+end
+
+function Enemy:animation_cycle(dt)
+    self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
+    if self.current_frame > #self.animations[self.animation_state] then
+        self.current_frame = 1
+        if self.animation_state == "attacking_up" or self.animation_state == "attacking_down" or self.animation_state == "attacking_left" or self.animation_state == "attacking_right" then
+            if self.animation_state == "attacking_up" then
+                self.animation_state = "idle_up"
+            elseif self.animation_state == "attacking_down" then
+                self.animation_state = "idle_down"
+            elseif self.animation_state == "attacking_left" then
+                self.animation_state = "idle_left"
+            elseif self.animation_state == "attacking_right" then
+                self.animation_state = "idle_right"
+            end
         end
     end
 end
@@ -71,7 +86,7 @@ function Enemy:begin_turn(player_x_tile, player_y_tile)
         occupation_map[self.current_y][self.current_x] = false
 
         if (math.abs(x_difference) == 1 and math.abs(y_difference) == 0) or (math.abs(y_difference) == 1 and math.abs(x_difference) == 0) then
-            --attack
+            self:attack(x_difference, y_difference)
         elseif math.abs(x_difference) > math.abs(y_difference) then
             if x_difference < 0 then
                 if self:check_occupation(1, 0) == true then
@@ -124,6 +139,19 @@ function Enemy:begin_turn(player_x_tile, player_y_tile)
         occupation_map[self.current_y][self.current_x] = true
     end
 end
+
+function Enemy:attack(x_difference, y_difference)
+    player:take_damage()
+    if y_difference == 1 then
+        self.animation_state = "attacking_up"
+    elseif y_difference == -1 then
+        self.animation_state = "attacking_down"
+    elseif x_difference == 1 then
+        self.animation_state = "attacking_left"
+    elseif x_difference == -1 then
+        self.animation_state = "attacking_right"
+    end
+end    
 
 function Enemy:check_occupation(x_offset, y_offset)
     if self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 1 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 2 then
