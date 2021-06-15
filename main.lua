@@ -32,7 +32,7 @@ end
 function love.keypressed(key)
     local allow_player_action = true
     for index, enemy in ipairs(map1.enemies) do
-        if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" then
+        if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" and enemy.animation_state ~= "dead" then
             allow_player_action = false
         end
     end

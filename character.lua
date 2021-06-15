@@ -164,6 +164,11 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
             enemy.health = enemy.health - 50
+            if enemy.health <= 0 then
+                enemy.animation_state = "dead"
+                enemy.health = 0
+                occupation_map[enemy.current_y][enemy.current_x] = false
+            end
         end
     end
 end
