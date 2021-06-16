@@ -75,10 +75,12 @@ function love.keypressed(key)
                 end
             elseif key == "q" and game_state == "play" then
                 player:swap_weapons()
+            elseif key == "e" and game_state == "play" and tilemap[player.current_y_tile][player.current_x_tile] == 4 then
+                game_state = "select_attacks"
             elseif key == "escape" then
                 if game_state == "play" then
                     game_state = "pause"
-                else
+                elseif game_state == "pause" then
                     game_state = "play"
                 end
             end

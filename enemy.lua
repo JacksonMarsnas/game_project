@@ -154,7 +154,7 @@ function Enemy:attack(x_difference, y_difference)
 end    
 
 function Enemy:check_occupation(x_offset, y_offset)
-    if self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 1 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 2 then
+    if self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 1 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 2 and tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 4 then
         return false
     elseif self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and occupation_map[self.current_y + y_offset][self.current_x + x_offset] == true then
         return false

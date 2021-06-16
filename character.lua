@@ -213,7 +213,7 @@ function Character:create_animations()
 end
 
 function Character:check_occupation(x_offset, y_offset)
-    if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 then
+    if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 then
         return false
     elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
         return false
