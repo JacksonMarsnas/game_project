@@ -11,6 +11,9 @@ function Character:new()
         end
     end
 
+    nav_font = love.graphics.newFont( "ARCADECLASSIC.TTF", 24)
+    nav_font:setFilter( "nearest", "nearest" )
+
     self.current_action = "none"
     self.x = 128
     self.y = 128
@@ -24,6 +27,7 @@ function Character:new()
     self.health = 100
     self.current_map = "map_1"
     self.stop_drawing = false
+    self.current_weapon = 1
 end
 
 function Character:draw()
@@ -33,6 +37,9 @@ function Character:draw()
         love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
         love.graphics.setColor(1, 1, 1)
         love.graphics.print(self.health .. " HP", 20, 930)
+        love.graphics.setFont(nav_font)
+        love.graphics.print(moves.all_moves[self.current_weapon]["name"], 300, 910)
+        love.graphics.print(moves.all_moves[self.current_weapon]["type"] .. " " .. moves.all_moves[self.current_weapon]["power"], 300, 940)
     end
 end
 
@@ -170,7 +177,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
-            enemy.health = enemy.health - 50
+            enemy.health = enemy.health - moves.all_moves[self.current_weapon]["power"]
             if enemy.health <= 0 then
                 enemy.animation_state = "dead"
                 enemy.health = 0
@@ -221,5 +228,12 @@ function Character:take_damage()
         self.health = 0
         self.current_action = "dying"
         self.animation_state = "dying"
+    end
+end
+
+function Character:swap_weapons()
+    self.current_weapon = self.current_weapon + 1
+    if self.current_weapon > 3 then
+        self.current_weapon = 1
     end
 end

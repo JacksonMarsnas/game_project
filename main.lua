@@ -5,19 +5,21 @@ function love.load()
     require "character"
     require "enemy"
     require "enemy1"
-    require"death"
+    require "death"
+    require "moves"
 
     window_width = 960
     window_height = 1000
     love.window.setMode(window_width, window_height)
 
-    local myFont = love.graphics.newFont( "ARCADECLASSIC.TTF", 32)
+    myFont = love.graphics.newFont( "ARCADECLASSIC.TTF", 32)
     myFont:setFilter( "nearest", "nearest" )
     love.graphics.setFont(myFont)
 
     player = Character()
     map1 = Map1()
     death = Death()
+    moves = Moves()
 
     all_maps = {
         death_screen = death,
@@ -36,6 +38,7 @@ end
 
 function love.draw()
     if game_state == "play" then
+        love.graphics.setFont(myFont)
         all_maps[player.current_map]:draw()
         player:draw()
     else
@@ -65,6 +68,8 @@ function love.keypressed(key)
                 elseif key == "right" then
                     player:attack(key, 1, 0, map1.enemies)
                 end
+            elseif key == "q" and game_state == "play" then
+                player:swap_weapons()
             elseif key == "escape" then
                 if game_state == "play" then
                     game_state = "pause"
@@ -77,5 +82,8 @@ function love.keypressed(key)
 end
 
 function pause_screen()
-    love.graphics.print("PAUSED", 64, 64)
+    local pause_font = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    pause_font:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(pause_font)
+    love.graphics.printf("PAUSED", 0, window_height / 2 - pause_font:getHeight() / 2, 960, "center")
 end
