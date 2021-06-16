@@ -23,11 +23,13 @@ function Character:new()
     self.current_frame = 1
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
-    self.max_health = 100
-    self.health = 100
     self.current_map = "map_1"
     self.stop_drawing = false
     self.current_weapon = 1
+
+    self.max_health = 100
+    self.health = self.max_health
+    self.defense = 0.1
 end
 
 function Character:draw()
@@ -177,7 +179,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
-            enemy.health = enemy.health - moves.all_moves[self.current_weapon]["power"]
+            enemy.health = enemy.health - self:calculate_damage(enemy)
             if enemy.health <= 0 then
                 enemy.animation_state = "dead"
                 enemy.health = 0
@@ -185,6 +187,10 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
             end
         end
     end
+end
+
+function Character:calculate_damage(enemy)
+    return moves.all_moves[self.current_weapon]["power"] - (moves.all_moves[self.current_weapon]["power"] * enemy.defense)
 end
 
 function Character:create_animations()
@@ -222,8 +228,8 @@ function Character:animation_loop()
     return true 
 end
 
-function Character:take_damage()
-    self.health = self.health - 20
+function Character:take_damage(damage_taken)
+    self.health = self.health - (damage_taken - (damage_taken * self.defense))
     if self.health <= 0 then
         self.health = 0
         self.current_action = "dying"
