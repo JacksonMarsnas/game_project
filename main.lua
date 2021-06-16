@@ -46,6 +46,8 @@ function love.draw()
         player:draw()
     elseif game_state == "pause" then
         pause_screen()
+    elseif game_state == "player_attacks_info" then
+        player_attacks_info()
     elseif game_state == "select_attacks" then
         select_attacks_screen()
     end
@@ -76,7 +78,7 @@ function love.keypressed(key)
             elseif key == "q" and game_state == "play" then
                 player:swap_weapons()
             elseif key == "e" and game_state == "play" and tilemap[player.current_y_tile][player.current_x_tile] == 4 then
-                game_state = "select_attacks"
+                game_state = "player_attacks_info"
             elseif key == "escape" then
                 if game_state == "play" then
                     game_state = "pause"
@@ -100,6 +102,29 @@ function pause_screen()
     love.graphics.draw(change_moves_text.text, change_moves_text.x - change_moves_text.text:getWidth() / 2, change_moves_text.y)
     if love.mouse.isDown(1) and love.mouse.getX() >= change_moves_text.x - change_moves_text.text:getWidth() / 2 and love.mouse.getX() <= change_moves_text.x + change_moves_text.text:getWidth() / 2 and love.mouse.getY() >= change_moves_text.y and love.mouse.getY() <= change_moves_text.y + change_moves_text.text:getHeight() then
         game_state = "select_attacks"
+    end
+end
+
+function player_attacks_info()
+    local attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    local attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
+    attacks_header:setFilter( "nearest", "nearest" )
+    attacks_text:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(attacks_header)
+    love.graphics.printf("EQUIPPED ATTACKS", 0, 128, 960, "center")
+    love.graphics.setFont(attacks_text)
+    love.graphics.printf("Click on one of them to change it.", 0, 216, 960, "center")
+
+    moves_list = {}
+    for index, attack in ipairs(player.attacks) do
+        table.insert(moves_list, {text = love.graphics.newText(attacks_text, moves.all_moves[attack]["name"] .. " - Type: " .. moves.all_moves[attack]["type"] .. " - Power: " .. moves.all_moves[attack]["power"]),
+        x = 480,
+        y = 256 + index * 64,
+        id = index})
+    end
+
+    for index, attack in ipairs(moves_list) do
+        love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
     end
 end
 
@@ -130,11 +155,14 @@ function love.mousepressed(x, y, button)
         for index, attack in ipairs(moves_list) do
             if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
                 player.attacks[current_attack_slot] = attack["id"]
-                current_attack_slot = current_attack_slot + 1
-                if current_attack_slot > 3 then
-                    current_attack_slot = 1
-                    game_state = "play"
-                end
+                game_state = "play"
+            end
+        end
+    elseif game_state == "player_attacks_info" then
+        for index, attack in ipairs(moves_list) do
+            if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
+                current_attack_slot = attack["id"]
+                game_state = "select_attacks"
             end
         end
     end
