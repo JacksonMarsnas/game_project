@@ -8,6 +8,7 @@ function love.load()
     require "death"
     require "moves"
 
+    current_attack_slot = 1
     window_width = 960
     window_height = 1000
     love.window.setMode(window_width, window_height)
@@ -30,9 +31,11 @@ function love.load()
 end
 
 function love.update(dt)
-    player:update(dt, map1.enemies)
-    for index, enemy in ipairs(map1.enemies) do
-        enemy:update(dt)
+    if game_state == "play" then
+        player:update(dt, map1.enemies)
+        for index, enemy in ipairs(map1.enemies) do
+            enemy:update(dt)
+        end
     end
 end
 
@@ -41,8 +44,10 @@ function love.draw()
         love.graphics.setFont(myFont)
         all_maps[player.current_map]:draw()
         player:draw()
-    else
+    elseif game_state == "pause" then
         pause_screen()
+    elseif game_state == "select_attacks" then
+        select_attacks_screen()
     end
 end
 
@@ -82,8 +87,53 @@ function love.keypressed(key)
 end
 
 function pause_screen()
-    local pause_font = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
-    pause_font:setFilter( "nearest", "nearest" )
-    love.graphics.setFont(pause_font)
-    love.graphics.printf("PAUSED", 0, window_height / 2 - pause_font:getHeight() / 2, 960, "center")
+    local pause_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    local pause_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
+    pause_header:setFilter( "nearest", "nearest" )
+    pause_text:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(pause_header)
+    love.graphics.printf("PAUSED", 0, 128, 960, "center")
+    love.graphics.setFont(pause_text)
+    change_moves_text = {text = love.graphics.newText(pause_text, "CHANGE ATTACKS"), x = 480, y = 192}
+    love.graphics.draw(change_moves_text.text, change_moves_text.x - change_moves_text.text:getWidth() / 2, change_moves_text.y)
+    if love.mouse.isDown(1) and love.mouse.getX() >= change_moves_text.x - change_moves_text.text:getWidth() / 2 and love.mouse.getX() <= change_moves_text.x + change_moves_text.text:getWidth() / 2 and love.mouse.getY() >= change_moves_text.y and love.mouse.getY() <= change_moves_text.y + change_moves_text.text:getHeight() then
+        game_state = "select_attacks"
+    end
+end
+
+function select_attacks_screen()
+    local attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    local attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
+    attacks_header:setFilter( "nearest", "nearest" )
+    attacks_text:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(attacks_header)
+    love.graphics.printf("SELECT YOUR MOVES", 0, 128, 960, "center")
+    love.graphics.setFont(attacks_text)
+
+    moves_list = {}
+    for index, attack in ipairs(moves.all_moves) do
+        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Power: " .. attack["power"]),
+        x = 480,
+        y = 192 + index * 64,
+        id = index})
+    end
+
+    for index, attack in ipairs(moves_list) do
+        love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
+    end
+end
+
+function love.mousepressed(x, y, button)
+    if game_state == "select_attacks" then
+        for index, attack in ipairs(moves_list) do
+            if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
+                player.attacks[current_attack_slot] = attack["id"]
+                current_attack_slot = current_attack_slot + 1
+                if current_attack_slot > 3 then
+                    current_attack_slot = 1
+                    game_state = "play"
+                end
+            end
+        end
+    end
 end

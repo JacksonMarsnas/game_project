@@ -29,6 +29,7 @@ function Character:new()
 
     self.max_health = 100
     self.health = self.max_health
+    self.attacks = {1, 2, 3}
     self.defense = 0.1
 end
 
@@ -40,8 +41,8 @@ function Character:draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.print(self.health .. " HP", 20, 930)
         love.graphics.setFont(nav_font)
-        love.graphics.print(moves.all_moves[self.current_weapon]["name"], 300, 910)
-        love.graphics.print(moves.all_moves[self.current_weapon]["type"] .. " " .. moves.all_moves[self.current_weapon]["power"], 300, 940)
+        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["name"], 300, 910)
+        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["type"] .. " " .. moves.all_moves[self.attacks[self.current_weapon]]["power"], 300, 940)
     end
 end
 
@@ -190,7 +191,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 end
 
 function Character:calculate_damage(enemy)
-    return moves.all_moves[self.current_weapon]["power"] - (moves.all_moves[self.current_weapon]["power"] * enemy.defense)
+    return moves.all_moves[self.attacks[self.current_weapon]]["power"] - (moves.all_moves[self.attacks[self.current_weapon]]["power"] * enemy.defense)
 end
 
 function Character:create_animations()
