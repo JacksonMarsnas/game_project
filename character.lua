@@ -1,6 +1,6 @@
 Character = Object:extend()
 
-function Character:new()
+function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy)
     character_sheet = love.graphics.newImage("base_character.png")
     character_frames = {}
     sprite_dimensions = 64
@@ -27,10 +27,14 @@ function Character:new()
     self.stop_drawing = false
     self.current_weapon = 1
 
-    self.max_health = 100
+    self.max_health = new_health
     self.health = self.max_health
     self.attacks = {1, 2, 3}
     self.defense = 0.1
+    self.strength = new_strength
+    self.skill = new_skill
+    self.arcane = new_arcane
+    self.holy = new_holy
 end
 
 function Character:draw()

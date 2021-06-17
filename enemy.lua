@@ -8,6 +8,7 @@ function Enemy:new(starting_x, starting_y)
     self.current_frame = 1
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
+    sprite_dimensions = 64
 
     occupation_map[self.current_y][self.current_x] = true
 end

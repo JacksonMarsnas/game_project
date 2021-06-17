@@ -7,6 +7,7 @@ function love.load()
     require "enemy1"
     require "death"
     require "moves"
+    require "character_classes"
 
     current_attack_slot = 1
     window_width = 960
@@ -17,17 +18,18 @@ function love.load()
     myFont:setFilter( "nearest", "nearest" )
     love.graphics.setFont(myFont)
 
-    player = Character()
     map1 = Map1()
     death = Death()
     moves = Moves()
+    character_classes = Character_classes()
 
     all_maps = {
         death_screen = death,
         map_1 = map1
     }
     current_map = all_maps[map1]
-    game_state = "play"
+    game_state = "character_select"
+    setup_character_screen()
 end
 
 function love.update(dt)
@@ -40,7 +42,9 @@ function love.update(dt)
 end
 
 function love.draw()
-    if game_state == "play" then
+    if game_state == "character_select" then
+        character_select()
+    elseif game_state == "play" then
         love.graphics.setFont(myFont)
         all_maps[player.current_map]:draw()
         player:draw()
@@ -88,6 +92,27 @@ function love.keypressed(key)
             end
         end
     end
+end
+
+function setup_character_screen()
+    local character_select_text = love.graphics.newFont("ARCADECLASSIC.TTF", 24)
+    character_select_text:setFilter( "nearest", "nearest" )
+
+    character_list = {}
+    for index, current_character in ipairs(character_classes.all_characters) do
+        table.insert(character_list, 
+        {name = love.graphics.newText(character_select_text, current_character["name"]),
+        display_name = current_character["name"],
+        health = current_character["health"],
+        strength = current_character["strength"],
+        skill = current_character["skill"],
+        arcane = current_character["arcane"],
+        holy = current_character["holy"],
+        x = 20,
+        y = 256 + index * 64,
+        selected = false})
+    end
+    character_list[1]["selected"] = true
 end
 
 function pause_screen()
@@ -150,6 +175,36 @@ function select_attacks_screen()
     end
 end
 
+function character_select()
+    local character_select_text = love.graphics.newFont("ARCADECLASSIC.TTF", 24)
+    local character_select_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    character_select_header:setFilter( "nearest", "nearest" )
+    character_select_text:setFilter( "nearest", "nearest" )
+    love.graphics.setFont(character_select_header)
+    love.graphics.printf("SELECT YOUR CHARACTER", 0, 128, 960, "center")
+    love.graphics.setFont(character_select_text)
+    love.graphics.printf("Click on a character to view more info about them.", 0, 216, 960, "center")
+    
+    for index, current_character in ipairs(character_list) do
+        love.graphics.draw(current_character.name, current_character.x, current_character.y)
+        if current_character["selected"] == true then
+            love.graphics.print("Name: " .. current_character.display_name, 500, 300)
+            love.graphics.print("Health: " .. current_character.health, 500, 350)
+            love.graphics.print("Strength: " .. current_character.strength, 500, 400)
+            love.graphics.print("Skill: " .. current_character.skill, 500, 450)
+            love.graphics.print("Arcane: " .. current_character.arcane, 500, 500)
+            love.graphics.print("Holy: " .. current_character.holy, 500, 550)
+        end
+    end
+
+    start_button = {
+        text = love.graphics.newText(character_select_text, "START"),
+        x = 500,
+        y = 650
+    }
+    love.graphics.draw(start_button["text"], start_button["x"], start_button["y"])
+end
+
 function love.mousepressed(x, y, button)
     if game_state == "select_attacks" then
         for index, attack in ipairs(moves_list) do
@@ -163,6 +218,23 @@ function love.mousepressed(x, y, button)
             if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
                 current_attack_slot = attack["id"]
                 game_state = "select_attacks"
+            end
+        end
+    elseif game_state == "character_select" then
+        if love.mouse.getX() >= start_button["x"] and love.mouse.getX() <= start_button["x"] + start_button.text:getWidth() and love.mouse.getY() >= start_button["y"] and love.mouse.getY() <= start_button["y"] + start_button.text:getHeight() then
+            for index, current_character in ipairs(character_list) do
+                if current_character["selected"] == true then
+                    player = Character(current_character.health, current_character.strength, current_character.skill, current_character.arcane, current_character.holy)
+                    game_state = "play"
+                end
+            end
+        end
+        for index, current_character in ipairs(character_list) do
+            if love.mouse.getX() >= current_character.x and love.mouse.getX() <= current_character.x + current_character.name:getWidth() and love.mouse.getY() >= current_character.y and love.mouse.getY() <= current_character.y + current_character.name:getHeight() then
+                for index, deleted_character in ipairs(character_list) do
+                    deleted_character["selected"] = false
+                end
+                current_character["selected"] = true
             end
         end
     end
