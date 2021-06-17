@@ -3,25 +3,50 @@ Moves = Object:extend()
 function Moves:new()
     self.all_moves = {
         {
-            name = "Move 1",
+            name = "Strength Move",
             type = "Attack",
-            power = 50
+            scaling = {
+                strength = 1,
+                skill = 0,
+                arcane = 0,
+                holy = 0
+            }
         }, {
-            name = "Move 2",
+            name = "Skill Move",
             type = "Attack",
-            power = 30
+            scaling = {
+                strength = 0,
+                skill = 1,
+                arcane = 0,
+                holy = 0
+            }
         }, {
-            name = "Move 3",
+            name = "Arcane Move",
             type = "Attack",
-            power = 40
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 1,
+                holy = 0
+            }
         }, {
-            name = "Move 4",
+            name = "Holy Move",
             type = "Attack",
-            power = 40
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0,
+                holy = 1
+            }
         }, {
-            name = "Move 5",
+            name = "Hybrid Move",
             type = "Attack",
-            power = 40
+            scaling = {
+                strength = 1,
+                skill = 1,
+                arcane = 0,
+                holy = 0
+            }
         },
     }
 end

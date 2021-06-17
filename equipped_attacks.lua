@@ -20,7 +20,7 @@ function Equipped_Attacks:draw()
 
     moves_list = {}
     for index, attack in ipairs(player.attacks) do
-        table.insert(moves_list, {text = love.graphics.newText(attacks_text, moves.all_moves[attack]["name"] .. " - Type: " .. moves.all_moves[attack]["type"] .. " - Power: " .. moves.all_moves[attack]["power"]),
+        table.insert(moves_list, {text = love.graphics.newText(attacks_text, moves.all_moves[attack]["name"] .. " - Type: " .. moves.all_moves[attack]["type"]),
         x = 480,
         y = 256 + index * 64,
         id = index})

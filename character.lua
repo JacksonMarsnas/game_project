@@ -46,7 +46,7 @@ function Character:draw()
         love.graphics.print(self.health .. " HP", 20, 930)
         love.graphics.setFont(nav_font)
         love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["name"], 300, 910)
-        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["type"] .. " " .. moves.all_moves[self.attacks[self.current_weapon]]["power"], 300, 940)
+        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["type"], 300, 940)
     end
 end
 
@@ -195,7 +195,13 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 end
 
 function Character:calculate_damage(enemy)
-    return moves.all_moves[self.attacks[self.current_weapon]]["power"] - (moves.all_moves[self.attacks[self.current_weapon]]["power"] * enemy.defense)
+    local damage = 0
+    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["strength"] * self.strength
+    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["skill"] * self.skill
+    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["arcane"] * self.arcane
+    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["holy"] * self.holy    
+
+    return damage
 end
 
 function Character:create_animations()

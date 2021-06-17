@@ -104,28 +104,6 @@ function love.keypressed(key)
     end
 end
 
-function select_attacks_screen()
-    local attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
-    local attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
-    attacks_header:setFilter( "nearest", "nearest" )
-    attacks_text:setFilter( "nearest", "nearest" )
-    love.graphics.setFont(attacks_header)
-    love.graphics.printf("SELECT YOUR MOVES", 0, 128, 960, "center")
-    love.graphics.setFont(attacks_text)
-
-    moves_list = {}
-    for index, attack in ipairs(moves.all_moves) do
-        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Power: " .. attack["power"]),
-        x = 480,
-        y = 192 + index * 64,
-        id = index})
-    end
-
-    for index, attack in ipairs(moves_list) do
-        love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
-    end
-end
-
 function love.mousepressed(x, y, button)
     if game_state == "select_attacks" then
         select_attacks_screen:mouseClicked(x, y, button)

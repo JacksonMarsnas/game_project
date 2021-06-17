@@ -19,7 +19,7 @@ function Select_Attacks_Screen:draw()
 
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Power: " .. attack["power"]),
+        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"]),
         x = 480,
         y = 192 + index * 64,
         id = index})

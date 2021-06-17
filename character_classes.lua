@@ -3,26 +3,40 @@ Character_classes = Object:extend()
 function Character_classes:new()
     self.all_characters = {
         {
-            name = "Character 1",
+            name = "Strength Character",
             health = 100,
-            strength = 50,
-            skill = 50,
-            arcane = 50,
-            holy = 50
+            strength = 30,
+            skill = 0,
+            arcane = 0,
+            holy = 0
         }, {
-            name = "Character 2",
+            name = "Skill Character",
             health = 90,
-            strength = 40,
-            skill = 40,
-            arcane = 60,
-            holy = 60
+            strength = 0,
+            skill = 30,
+            arcane = 0,
+            holy = 0
         }, {
-            name = "Character 3",
+            name = "Arcane Character",
             health = 110,
-            strength = 60,
-            skill = 60,
-            arcane = 40,
-            holy = 40
-        }, 
+            strength = 0,
+            skill = 0,
+            arcane = 30,
+            holy = 0
+        }, {
+            name = "Holy Character",
+            health = 110,
+            strength = 0,
+            skill = 0,
+            arcane = 00,
+            holy = 30
+        }, {
+            name = "Hybrid Character",
+            health = 110,
+            strength = 30,
+            skill = 30,
+            arcane = 0,
+            holy = 0
+        },
     }
 end
