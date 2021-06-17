@@ -12,6 +12,7 @@ function love.load()
     require "pause_screen"
     require "equipped_attacks"
     require "select_attacks_screen"
+    require "effects"
 
     current_attack_slot = 1
     window_width = 960
@@ -24,6 +25,8 @@ function love.load()
 
     map1 = Map1()
     death = Death()
+    player = Character(0, 0, 0, 0, 0)
+    effects = Effects()
     moves = Moves()
     character_classes = Character_classes()
     character_select_screen = Character_Select_Screen()

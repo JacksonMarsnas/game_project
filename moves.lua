@@ -11,9 +11,7 @@ function Moves:new()
                 arcane = 0,
                 holy = 0
             },
-            effect = {
-                function() end
-            }
+            effect = effects.all_effects[1]["effect_function"]
         }, {
             name = "Skill Move",
             type = "Attack",
@@ -23,9 +21,7 @@ function Moves:new()
                 arcane = 0,
                 holy = 0
             },
-            effect = {
-                function() end
-            }
+            effect = function() end
         }, {
             name = "Arcane Move",
             type = "Attack",

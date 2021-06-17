@@ -29,7 +29,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
 
     self.max_health = new_health
     self.health = self.max_health
-    self.attacks = {moves.all_moves[1], moves.all_moves[2], moves.all_moves[3]}
+    self.attacks = {}
     self.defense = 0.1
     self.strength = new_strength
     self.skill = new_skill
@@ -197,7 +197,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
         self.health = self.health + 100
     end
 
-    self.attacks[self.current_weapon]["effect"][1]()
+    self.attacks[self.current_weapon]["effect"]()
 end
 
 function Character:calculate_damage(enemy)
