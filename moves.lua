@@ -10,6 +10,9 @@ function Moves:new()
                 skill = 0,
                 arcane = 0,
                 holy = 0
+            },
+            effect = {
+                function() end
             }
         }, {
             name = "Skill Move",
@@ -19,6 +22,9 @@ function Moves:new()
                 skill = 1,
                 arcane = 0,
                 holy = 0
+            },
+            effect = {
+                function() end
             }
         }, {
             name = "Arcane Move",
@@ -28,6 +34,9 @@ function Moves:new()
                 skill = 0,
                 arcane = 1,
                 holy = 0
+            },
+            effect = {
+                function() end
             }
         }, {
             name = "Holy Move",
@@ -37,6 +46,9 @@ function Moves:new()
                 skill = 0,
                 arcane = 0,
                 holy = 1
+            },
+            effect = {
+                function() end
             }
         }, {
             name = "Hybrid Move",
@@ -46,7 +58,22 @@ function Moves:new()
                 skill = 1,
                 arcane = 0,
                 holy = 0
+            },
+            effect = {
+                function() end
             }
-        },
+        }, {
+            name = "Heal",
+            type = "Buff",
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0,
+                holy = 1
+            },
+            effect = {
+                function() end
+            }
+        }
     }
 end

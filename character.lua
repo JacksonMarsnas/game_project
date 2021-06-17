@@ -29,7 +29,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
 
     self.max_health = new_health
     self.health = self.max_health
-    self.attacks = {1, 2, 3}
+    self.attacks = {moves.all_moves[1], moves.all_moves[2], moves.all_moves[3]}
     self.defense = 0.1
     self.strength = new_strength
     self.skill = new_skill
@@ -45,8 +45,8 @@ function Character:draw()
         love.graphics.setColor(1, 1, 1)
         love.graphics.print(self.health .. " HP", 20, 930)
         love.graphics.setFont(nav_font)
-        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["name"], 300, 910)
-        love.graphics.print(moves.all_moves[self.attacks[self.current_weapon]]["type"], 300, 940)
+        love.graphics.print(self.attacks[self.current_weapon]["name"], 300, 910)
+        love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
     end
 end
 
@@ -182,24 +182,30 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
     self.current_action = "attacking_" .. key
 
-    for index, enemy in ipairs(current_enemies) do
-        if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
-            enemy.health = enemy.health - self:calculate_damage(enemy)
-            if enemy.health <= 0 then
-                enemy.animation_state = "dead"
-                enemy.health = 0
-                occupation_map[enemy.current_y][enemy.current_x] = false
+    if self.attacks[self.current_weapon]["type"] == "Attack" then
+        for index, enemy in ipairs(current_enemies) do
+            if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
+                enemy.health = enemy.health - self:calculate_damage(enemy)
+                if enemy.health <= 0 then
+                    enemy.animation_state = "dead"
+                    enemy.health = 0
+                    occupation_map[enemy.current_y][enemy.current_x] = false
+                end
             end
         end
+    elseif self.attacks[self.current_weapon]["type"] == "Buff" then
+        self.health = self.health + 100
     end
+
+    self.attacks[self.current_weapon]["effect"][1]()
 end
 
 function Character:calculate_damage(enemy)
     local damage = 0
-    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["strength"] * self.strength
-    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["skill"] * self.skill
-    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["arcane"] * self.arcane
-    damage = damage + moves.all_moves[self.attacks[self.current_weapon]]["scaling"]["holy"] * self.holy    
+    damage = damage + self.attacks[self.current_weapon]["scaling"]["strength"] * self.strength
+    damage = damage + self.attacks[self.current_weapon]["scaling"]["skill"] * self.skill
+    damage = damage + self.attacks[self.current_weapon]["scaling"]["arcane"] * self.arcane
+    damage = damage + self.attacks[self.current_weapon]["scaling"]["holy"] * self.holy    
 
     return damage
 end
