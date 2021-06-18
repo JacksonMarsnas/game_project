@@ -56,13 +56,13 @@ end
 
 function Select_Attacks_Screen:mouseClicked(x, y, button)
     for index, option in ipairs(filter_options) do
-        if love.mouse.getX() >= option.x - option.text:getWidth() / 2 and love.mouse.getX() <= option.x + option.text:getWidth() / 2 and love.mouse.getY() >= option.y and love.mouse.getY() <= option.y + option.text:getHeight() then
+        if love.mouse.getX() >= option.x - option.text:getWidth() / 2 and love.mouse.getX() <= option.x + option.text:getWidth() / 2 and love.mouse.getY() >= option.y + self.screen_top and love.mouse.getY() <= option.y + option.text:getHeight() + self.screen_top then
             self.filter_state = option.label
         end
     end
 
     for index, attack in ipairs(moves_list) do
-        if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
+        if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y + self.screen_top and love.mouse.getY() <= attack.y + attack.text:getHeight() + self.screen_top then
             player.attacks[current_attack_slot] = attack["all_info"]
             game_state = "augmentation_screen"
         end

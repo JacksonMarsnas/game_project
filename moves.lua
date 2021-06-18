@@ -1,13 +1,17 @@
 Moves = Object:extend()
 
 function Moves:new()
+    self:create_buffs()
+
     self.all_moves = {
         {
             name = "Strength Move",
             type = "Attack",
+            base_damage = 20,
+            stamina = 30,
             slots = 1,
             scaling = {
-                strength = 1,
+                strength = 0.5,
                 skill = 0,
                 arcane = 0,
                 holy = 0
@@ -17,10 +21,12 @@ function Moves:new()
         }, {
             name = "Skill Move",
             type = "Attack",
+            base_damage = 20,
+            stamina = 30,
             slots = 1,
             scaling = {
                 strength = 0,
-                skill = 1,
+                skill = 0.5,
                 arcane = 0,
                 holy = 0
             },
@@ -29,11 +35,13 @@ function Moves:new()
         }, {
             name = "Arcane Move",
             type = "Attack",
+            base_damage = 20,
+            stamina = 30,
             slots = 2,
             scaling = {
                 strength = 0,
                 skill = 0,
-                arcane = 1,
+                arcane = 0.5,
                 holy = 0
             },
             effect = {
@@ -44,12 +52,14 @@ function Moves:new()
         }, {
             name = "Holy Move",
             type = "Attack",
+            base_damage = 20,
+            stamina = 30,
             slots = 1,
             scaling = {
                 strength = 0,
                 skill = 0,
                 arcane = 0,
-                holy = 1
+                holy = 0.5
             },
             effect = {
                 effects.all_effects[1]
@@ -58,10 +68,12 @@ function Moves:new()
         }, {
             name = "Hybrid Move",
             type = "Attack",
+            base_damage = 15,
+            stamina = 30,
             slots = 1,
             scaling = {
-                strength = 1,
-                skill = 1,
+                strength = 0.3,
+                skill = 0.3,
                 arcane = 0,
                 holy = 0
             },
@@ -72,6 +84,8 @@ function Moves:new()
         }, {
             name = "Heal",
             type = "Buff",
+            base_buff = self.buffs["heal"],
+            stamina = 30,
             slots = 1,
             scaling = {
                 strength = 0,
@@ -83,146 +97,12 @@ function Moves:new()
                 effects.all_effects[1]
             },
             description = "A passive technique that heals the user moderately based on their holyness"
-        }, {
-            name = "Filler",
-            type = "Attack",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "Filler"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
-        }, {
-            name = "Filler",
-            type = "Buff",
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            description = "A passive technique that heals the user moderately\nbased on their holyness"
         }
+    }
+end
+
+function Moves:create_buffs()
+    self.buffs = {
+        heal = function() player.health = player.health + (player.holy * 0.5) end
     }
 end

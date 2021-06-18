@@ -28,6 +28,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.current_map = "map_1"
     self.stop_drawing = false
     self.current_weapon = 1
+    self.stamina = 0
 
     self.max_health = new_health
     self.health = self.max_health
@@ -44,8 +45,10 @@ function Character:draw()
         love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
         love.graphics.setColor(1, 0, 0)
         love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
+        love.graphics.setColor(0, 0.082, 0.56)
+        love.graphics.rectangle("fill", 20, 930, self.stamina / self.max_health * 256, 32)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.print(self.health .. " HP", 20, 930)
+        love.graphics.print(self.health - self.stamina .. " HP", 20, 930)
         love.graphics.setFont(nav_font)
         love.graphics.print(self.attacks[self.current_weapon]["name"], 300, 910)
         love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
@@ -193,9 +196,28 @@ function Character:movement_animation(dt, current_enemies)
     end
 end
 
+function Character:stamina_regen()
+    local allow_player_action = true
+    for index, enemy in ipairs(map1.enemies) do
+        if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" and enemy.animation_state ~= "dead" then
+            allow_player_action = false
+        end
+    end
+    if allow_player_action == true and player.regen_check == false and player.current_action == "none" then
+        self.stamina = self.stamina - 30
+        if self.stamina < 0 then
+            self.stamina = 0
+        end
+    end
+end
+
 function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
     self.current_action = "attacking_" .. key
+    self.stamina = self.stamina + self.attacks[self.current_weapon]["stamina"]
+    if self.stamina >= self.health then
+        self.stamina = self.health - 1
+    end
 
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         for index, enemy in ipairs(current_enemies) do
@@ -212,7 +234,10 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
             end
         end
     elseif self.attacks[self.current_weapon]["type"] == "Buff" then
-        self.health = self.health + 100
+        self.attacks[self.current_weapon]["base_buff"]()
+        for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+            effect["effect_function"]()
+        end
     end
 end
 
@@ -263,7 +288,7 @@ end
 
 function Character:take_damage(damage_taken)
     self.health = self.health - (damage_taken - (damage_taken * self.defense))
-    if self.health <= 0 then
+    if self.health - self.stamina <= 0 then
         self.health = 0
         self.current_action = "dying"
         self.animation_state = "dying"
