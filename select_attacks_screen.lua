@@ -19,7 +19,7 @@ function Select_Attacks_Screen:draw()
 
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"]),
+        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
         x = 480,
         y = 192 + index * 64,
         id = index,
@@ -36,7 +36,7 @@ function Select_Attacks_Screen:mouseClicked(x, y, button)
     for index, attack in ipairs(moves_list) do
         if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
             player.attacks[current_attack_slot] = attack["all_info"]
-            game_state = "play"
+            game_state = "augmentation_screen"
         end
     end
 end

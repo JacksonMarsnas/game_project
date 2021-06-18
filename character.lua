@@ -191,13 +191,14 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
                     enemy.health = 0
                     occupation_map[enemy.current_y][enemy.current_x] = false
                 end
+                for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+                    effect["effect_function"]()
+                end
             end
         end
     elseif self.attacks[self.current_weapon]["type"] == "Buff" then
         self.health = self.health + 100
     end
-
-    self.attacks[self.current_weapon]["effect"]()
 end
 
 function Character:calculate_damage(enemy)

@@ -13,6 +13,7 @@ function love.load()
     require "equipped_attacks"
     require "select_attacks_screen"
     require "effects"
+    require "augmentation_screen"
 
     current_attack_slot = 1
     window_width = 960
@@ -33,6 +34,7 @@ function love.load()
     pause_screen = Pause_Screen()
     equipped_attacks = Equipped_Attacks()
     select_attacks_screen = Select_Attacks_Screen()
+    augmentation_screen = Augmentation_Screen()
 
     all_maps = {
         death_screen = death,
@@ -65,6 +67,8 @@ function love.draw()
         equipped_attacks:draw()
     elseif game_state == "select_attacks" then
         select_attacks_screen:draw()
+    elseif game_state == "augmentation_screen" then
+        augmentation_screen:draw()
     end
 end
 
@@ -114,5 +118,7 @@ function love.mousepressed(x, y, button)
         equipped_attacks:mouseClicked(x, y, button)
     elseif game_state == "character_select" then
         character_select_screen:mouseClicked(x, y, button)
+    elseif game_state == "augmentation_screen" then
+        augmentation_screen:mouseClicked(x, y, button)
     end
 end
