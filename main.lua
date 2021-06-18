@@ -122,3 +122,9 @@ function love.mousepressed(x, y, button)
         augmentation_screen:mouseClicked(x, y, button)
     end
 end
+
+function love.wheelmoved(x, y)
+    if game_state == "select_attacks" then
+        select_attacks_screen:scroll(x, y)
+    end
+end
