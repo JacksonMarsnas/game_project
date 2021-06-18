@@ -11,7 +11,9 @@ end
 function Equipped_Attacks:draw()
     local attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
     local attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
+    local attacks_description = love.graphics.newFont("ARCADECLASSIC.TTF", 24)
     attacks_header:setFilter( "nearest", "nearest" )
+    attacks_description:setFilter( "nearest", "nearest" )
     attacks_text:setFilter( "nearest", "nearest" )
     love.graphics.setFont(attacks_header)
     love.graphics.printf("EQUIPPED ATTACKS", 0, 128, 960, "center")
@@ -21,13 +23,16 @@ function Equipped_Attacks:draw()
     moves_list = {}
     for index, attack in ipairs(player.attacks) do
         table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
+        description = attack["description"],
         x = 480,
-        y = 256 + index * 64,
+        y = 128 + index * 164,
         id = index})
     end
 
     for index, attack in ipairs(moves_list) do
         love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
+        love.graphics.setFont(attacks_description)
+        love.graphics.printf(attack.description, 0, attack.y + 48, 960, "center")
     end
 end
 
