@@ -13,6 +13,8 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
 
     nav_font = love.graphics.newFont( "ARCADECLASSIC.TTF", 24)
     nav_font:setFilter( "nearest", "nearest" )
+    effect_font = love.graphics.newFont( "ARCADECLASSIC.TTF", 20)
+    effect_font:setFilter( "nearest", "nearest" )
 
     self.current_action = "none"
     self.x = 128
@@ -47,6 +49,19 @@ function Character:draw()
         love.graphics.setFont(nav_font)
         love.graphics.print(self.attacks[self.current_weapon]["name"], 300, 910)
         love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
+
+        self:draw_effects()
+    end
+end
+
+function Character:draw_effects()
+    love.graphics.setFont(effect_font)
+    for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+        if index <= 2 then
+            love.graphics.print(effect["description"], 540, 910 + index * 48 - 48)
+        else
+            love.graphics.print(effect["description"], 740, 910 + index * 48 - 144)
+        end
     end
 end
 
