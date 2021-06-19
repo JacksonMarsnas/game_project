@@ -32,29 +32,39 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.current_weapon = 1
     self.stamina = 0
     self.bullet_is_present = false
+    self.regen_check = true
+    self.active_buffs = {}
 
     self.max_health = new_health
     self.health = self.max_health
     self.attacks = {}
     self.defense = 0.1
     self.strength = new_strength
+    self.base_strength = self.strength
     self.skill = new_skill
+    self.base_skill = self.skill
     self.arcane = new_arcane
+    self.base_arcane = self.arcane
     self.holy = new_holy
+    self.base_holy = self.holy
 end
 
 function Character:draw()
     if self.stop_drawing ~= true then
+        love.graphics.setFont(nav_font)
         love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
         love.graphics.setColor(1, 0, 0)
-        love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 32)
+        love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 24)
         love.graphics.setColor(0, 0.082, 0.56)
-        love.graphics.rectangle("fill", 20, 930, self.stamina / self.max_health * 256, 32)
+        love.graphics.rectangle("fill", 20, 930, self.stamina / self.max_health * 256, 24)
         love.graphics.setColor(1, 1, 1)
         love.graphics.print(self.health - self.stamina .. " HP", 20, 930)
-        love.graphics.setFont(nav_font)
         love.graphics.print(self.attacks[self.current_weapon]["name"], 300, 910)
         love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
+        love.graphics.setFont(effect_font)
+        for index, buff in ipairs(self.active_buffs) do
+            love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, 960)
+        end
 
         self:draw_effects()
     end
@@ -110,6 +120,14 @@ function Character:cycle_frames(dt, current_enemies)
             for index, enemy in ipairs(current_enemies) do
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
+        elseif self.attacks[self.current_weapon]["type"] == "Ranged" and self.bullet_is_present == false then
+            for index, enemy in ipairs(current_enemies) do
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
+            end
+        elseif self.attacks[self.current_weapon]["type"] == "Buff" then
+            for index, enemy in ipairs(current_enemies) do
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
+            end
         end
     end
 end
@@ -149,24 +167,32 @@ function Character:change_movement_animation(key)
         self.animation_state = "casting_up"
         bullet = Bullet(self.x, self.y, "up", 2)
         self.bullet_is_present = true
+    elseif key == "up" and self.attacks[self.current_weapon]["type"] == "Buff" then
+        self.animation_state = "casting_up"
     elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_down"
     elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Ranged" then
         self.animation_state = "casting_down"
         bullet = Bullet(self.x, self.y, "down", 2)
         self.bullet_is_present = true
+    elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Buff" then
+        self.animation_state = "casting_down"
     elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_left"
     elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Ranged" then
         self.animation_state = "casting_left"
         bullet = Bullet(self.x, self.y, "left", 2)
         self.bullet_is_present = true
+    elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Buff" then
+        self.animation_state = "casting_left"
     elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_right"
     elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Ranged" then
         self.animation_state = "casting_right"
         bullet = Bullet(self.x, self.y, "right", 2)
         self.bullet_is_present = true
+    elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Buff" then
+        self.animation_state = "casting_right"
     end
 end
 
@@ -239,6 +265,13 @@ function Character:stamina_regen()
         if self.stamina < 0 then
             self.stamina = 0
         end
+        for index, buff in ipairs(self.active_buffs) do
+            buff.duration = buff.duration - 1
+            if buff.duration <= 0 then
+                buff["revert"]()
+                table.remove(self.active_buffs, index)
+            end
+        end
     end
 end
 
@@ -246,7 +279,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         self.current_action = "attacking_" .. key
-    elseif self.attacks[self.current_weapon]["type"] == "Ranged" then
+    elseif self.attacks[self.current_weapon]["type"] == "Ranged" or self.attacks[self.current_weapon]["type"] == "Buff" then
         self.current_action = "casting_" .. key
     end
 
@@ -257,7 +290,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         for index, enemy in ipairs(current_enemies) do
-            if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 then
+            if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 and self:check_occupation(x_offset, y_offset) == false then
                 enemy.health = enemy.health - self:calculate_damage(enemy)
                 if enemy.health <= 0 then
                     enemy.animation_state = "dead"
@@ -269,16 +302,34 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
                 end
             end
         end
-    elseif self.attacks[self.current_weapon]["type"] == "Buff" then
-        self.attacks[self.current_weapon]["base_buff"]()
+    elseif self.attacks[self.current_weapon]["type"] == "Ranged" then
         for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
             effect["effect_function"]()
+        end
+    elseif self.attacks[self.current_weapon]["type"] == "Buff" then
+        local buff_used = false
+        for index, buff in ipairs(self.active_buffs) do
+            if self.attacks[self.current_weapon]["base_buff"]["name"] == buff["name"] then
+                buff_used = true
+            end
+        end
+        if buff_used == false then
+            self.attacks[self.current_weapon]["base_buff"]["buff"]()
+            table.insert(self.active_buffs, {
+                duration = self.attacks[self.current_weapon]["base_buff"]["duration"],
+                revert = self.attacks[self.current_weapon]["base_buff"]["revert"],
+                name = self.attacks[self.current_weapon]["base_buff"]["name"],
+                code = self.attacks[self.current_weapon]["base_buff"]["code"]
+            })
+            for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+                effect["effect_function"]()
+            end
         end
     end
 end
 
 function Character:calculate_damage(enemy)
-    local damage = 0
+    local damage = self.attacks[self.current_weapon]["base_damage"]
     damage = damage + self.attacks[self.current_weapon]["scaling"]["strength"] * self.strength
     damage = damage + self.attacks[self.current_weapon]["scaling"]["skill"] * self.skill
     damage = damage + self.attacks[self.current_weapon]["scaling"]["arcane"] * self.arcane
@@ -313,6 +364,7 @@ function Character:check_occupation(x_offset, y_offset)
     if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 then
         return false
     elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
+        love.graphics.setColor(1, 0, 0)
         return false
     else
         return true

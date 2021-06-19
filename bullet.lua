@@ -56,16 +56,22 @@ function Bullet:collision(current_enemies)
 
     if tilemap[y_tile][x_tile] ~= 1 and tilemap[y_tile][x_tile] ~= 2 and tilemap[y_tile][x_tile] ~= 4 then
         player.bullet_is_present = false
+        for index, enemy in ipairs(current_enemies) do
+            enemy:begin_turn(player.current_x_tile, player.current_y_tile)
+        end
     end
 
     for index, enemy in ipairs(current_enemies) do
         if x_tile == enemy.current_x and y_tile == enemy.current_y and enemy.health > 0 then
             player.bullet_is_present = false
-            enemy.health = enemy.health - 100
+            enemy.health = enemy.health - player:calculate_damage(enemy)
             if enemy.health <= 0 then
                 enemy.animation_state = "dead"
                 enemy.health = 0
                 occupation_map[enemy.current_y][enemy.current_x] = false
+            end
+            for index, enemy in ipairs(current_enemies) do
+                enemy:begin_turn(player.current_x_tile, player.current_y_tile)
             end
         end
     end

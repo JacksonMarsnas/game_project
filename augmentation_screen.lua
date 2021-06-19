@@ -16,7 +16,7 @@ function Augmentation_Screen:draw()
 
     augment_list = {}
     for index, augment in ipairs(effects.all_effects) do
-        table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"]),
+        table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
         x = 480,
         y = 192 + index * 64,
         id = index,

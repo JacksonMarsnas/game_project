@@ -84,8 +84,10 @@ function love.keypressed(key)
                 end
             end
 
-            if allow_player_action == true and player.bullet_is_present == false then
-                player.regen_check = false
+            if allow_player_action == true and player.bullet_is_present == false and player.regen_check == true then
+                if key == "w" or key == "a" or key == "s" or key == "d" or key == "up" or key == "down" or key == "left" or key == "right" then
+                    player.regen_check = false
+                end
                 if (key == "w" or key == "a" or key == "s" or key == "d") and game_state == "play" then
                     player:move(key)
                 elseif (key == "up" or key == "down" or key == "left" or key == "right") and game_state == "play" then

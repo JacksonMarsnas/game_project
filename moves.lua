@@ -8,7 +8,7 @@ function Moves:new()
             name = "Strength Move",
             type = "Attack",
             base_damage = 20,
-            stamina = 50,
+            stamina = 10,
             slots = 1,
             scaling = {
                 strength = 0.5,
@@ -82,17 +82,21 @@ function Moves:new()
             },
             description = "An attack that scales somewhat with the wielder's strength and skill"
         }, {
-            name = "Heal",
+            name = "Buffy McBuffFace",
             type = "Buff",
-            base_buff = self.buffs["heal"],
-            stamina = 30,
+            base_buff = self.buffs["bufface"],
+            stamina = 300,
             slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 1
+            effect = {
+                effects.all_effects[1]
             },
+            description = "A passive technique that heals the user moderately based on their holyness"
+        }, {
+            name = "Skill Buff",
+            type = "Buff",
+            base_buff = self.buffs["skill_buff"],
+            stamina = 0,
+            slots = 1,
             effect = {
                 effects.all_effects[1]
             },
@@ -120,6 +124,28 @@ end
 
 function Moves:create_buffs()
     self.buffs = {
-        heal = function() player.health = player.health + (player.holy * 0.5) end
+        bufface = {
+            name = "bufface",
+            code = "STR",
+            duration = 3,
+            buff = function()
+                player.base_strength = player.strength
+                player.strength = player.strength * 2
+            end,
+            revert = function()
+                player.strength = player.base_strength
+            end
+        }, skill_buff = {
+            name = "skill buff",
+            code = "SKL",
+            duration = 3,
+            buff = function()
+                player.base_skill = player.skill
+                player.skill = 50
+            end,
+            revert = function()
+                player.skill = player.base_skill
+            end
+        }
     }
 end

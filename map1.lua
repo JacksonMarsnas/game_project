@@ -19,6 +19,15 @@ function Map1:new()
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2}
     }
 
+    occupation_map = {}
+    for i = 0, 14 do
+        local new_line = {}
+        for j = 0, 14 do
+            table.insert(new_line, false)
+        end
+        table.insert(occupation_map, new_line)
+    end
+
     self.enemies = {
         Enemy1(640, 640),
         Enemy1(128, 192)
