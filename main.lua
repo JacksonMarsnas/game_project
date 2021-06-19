@@ -53,15 +53,7 @@ function love.update(dt)
         end
     end
 
-    local allow_player_action = true
-    for index, enemy in ipairs(map1.enemies) do
-        if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" and enemy.animation_state ~= "dead" then
-            allow_player_action = false
-        end
-    end
-    if allow_player_action == true and player.regen_check == false and player.current_action == "none" then
-        player:stamina_regen()
-    end
+    
 end
 
 function love.draw()
@@ -92,7 +84,7 @@ function love.keypressed(key)
                 end
             end
 
-            if allow_player_action == true then
+            if allow_player_action == true and player.bullet_is_present == false then
                 player.regen_check = false
                 if (key == "w" or key == "a" or key == "s" or key == "d") and game_state == "play" then
                     player:move(key)

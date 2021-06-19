@@ -8,7 +8,7 @@ function Moves:new()
             name = "Strength Move",
             type = "Attack",
             base_damage = 20,
-            stamina = 30,
+            stamina = 50,
             slots = 1,
             scaling = {
                 strength = 0.5,
@@ -97,7 +97,24 @@ function Moves:new()
                 effects.all_effects[1]
             },
             description = "A passive technique that heals the user moderately based on their holyness"
-        }
+        }, {
+            name = "Ranged Move",
+            type = "Ranged",
+            base_damage = 15,
+            stamina = 30,
+            slots = 1,
+            range = 2,
+            scaling = {
+                strength = 0.3,
+                skill = 0.3,
+                arcane = 0,
+                holy = 0
+            },
+            effect = {
+                effects.all_effects[1]
+            },
+            description = "An attack that scales somewhat with the wielder's strength and skill"
+        },
     }
 end
 

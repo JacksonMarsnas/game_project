@@ -1,6 +1,8 @@
 Character = Object:extend()
 
 function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy)
+    require "bullet"
+
     character_sheet = love.graphics.newImage("base_character.png")
     character_frames = {}
     sprite_dimensions = 64
@@ -29,6 +31,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.stop_drawing = false
     self.current_weapon = 1
     self.stamina = 0
+    self.bullet_is_present = false
 
     self.max_health = new_health
     self.health = self.max_health
@@ -66,12 +69,21 @@ function Character:draw_effects()
             love.graphics.print(effect["description"], 740, 910 + index * 48 - 144)
         end
     end
+    if self.bullet_is_present == true then
+        bullet:draw()
+    end
 end
 
 function Character:update(dt, current_enemies)
-    self:cycle_frames(dt, current_enemies)
-    if self.movement_animation ~= "none" then
-        self:movement_animation(dt, current_enemies)
+    if self.bullet_is_present == true then
+        bullet:update(dt, current_enemies)
+        self:cycle_frames(dt, current_enemies)
+    else
+        self:stamina_regen()
+        self:cycle_frames(dt, current_enemies)
+        if self.movement_animation ~= "none" then
+            self:movement_animation(dt, current_enemies)
+        end
     end
 end
 
@@ -80,13 +92,13 @@ function Character:cycle_frames(dt, current_enemies)
     if self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == true then
         self.current_frame = 1
     elseif self.current_frame > #self.animations[self.animation_state] and self:animation_loop() == false then
-        if self.current_action == "attacking_up" then
+        if self.current_action == "attacking_up" or self.current_action == "casting_up" then
             self.animation_state = "idle_up"
-        elseif self.current_action == "attacking_down" then
+        elseif self.current_action == "attacking_down" or self.current_action == "casting_down" then
             self.animation_state = "idle_down"
-        elseif self.current_action == "attacking_left" then
+        elseif self.current_action == "attacking_left" or self.current_action == "casting_left" then
             self.animation_state = "idle_left"
-        elseif self.current_action == "attacking_right" then
+        elseif self.current_action == "attacking_right" or self.current_action == "casting_right" then
             self.animation_state = "idle_right"
         elseif self.current_action == "dying" then
             self.stop_drawing = true
@@ -94,8 +106,10 @@ function Character:cycle_frames(dt, current_enemies)
         end
         self.current_frame = 1
         self.current_action = "none"
-        for index, enemy in ipairs(current_enemies) do
-            enemy:begin_turn(self.current_x_tile, self.current_y_tile)
+        if self.attacks[self.current_weapon]["type"] == "Attack" then
+            for index, enemy in ipairs(current_enemies) do
+                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
+            end
         end
     end
 end
@@ -129,14 +143,30 @@ function Character:change_movement_animation(key)
         self.animation_state = "walking_left"
     elseif key == "d" then
         self.animation_state = "walking_right"
-    elseif key == "up" then
+    elseif key == "up" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_up"
-    elseif key == "down" then
+    elseif key == "up" and self.attacks[self.current_weapon]["type"] == "Ranged" then
+        self.animation_state = "casting_up"
+        bullet = Bullet(self.x, self.y, "up", 2)
+        self.bullet_is_present = true
+    elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_down"
-    elseif key == "left" then
+    elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Ranged" then
+        self.animation_state = "casting_down"
+        bullet = Bullet(self.x, self.y, "down", 2)
+        self.bullet_is_present = true
+    elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_left"
-    elseif key == "right" then
+    elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Ranged" then
+        self.animation_state = "casting_left"
+        bullet = Bullet(self.x, self.y, "left", 2)
+        self.bullet_is_present = true
+    elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_right"
+    elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Ranged" then
+        self.animation_state = "casting_right"
+        bullet = Bullet(self.x, self.y, "right", 2)
+        self.bullet_is_present = true
     end
 end
 
@@ -203,8 +233,9 @@ function Character:stamina_regen()
             allow_player_action = false
         end
     end
-    if allow_player_action == true and player.regen_check == false and player.current_action == "none" then
+    if allow_player_action == true and self.regen_check == false and self.current_action == "none" then
         self.stamina = self.stamina - 30
+        self.regen_check = true
         if self.stamina < 0 then
             self.stamina = 0
         end
@@ -213,7 +244,12 @@ end
 
 function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
-    self.current_action = "attacking_" .. key
+    if self.attacks[self.current_weapon]["type"] == "Attack" then
+        self.current_action = "attacking_" .. key
+    elseif self.attacks[self.current_weapon]["type"] == "Ranged" then
+        self.current_action = "casting_" .. key
+    end
+
     self.stamina = self.stamina + self.attacks[self.current_weapon]["stamina"]
     if self.stamina >= self.health then
         self.stamina = self.health - 1
@@ -265,6 +301,10 @@ function Character:create_animations()
         attacking_left = {170, 171, 172, 173, 174, 175, 175, 175},
         attacking_down = {183, 184, 185, 186, 187, 188, 188, 188},
         attacking_right = {196, 197, 198, 199, 200, 201, 201, 201},
+        casting_up = {157, 158, 159, 160, 161, 162, 162, 162},
+        casting_left = {170, 171, 172, 173, 174, 175, 175, 175},
+        casting_down = {183, 184, 185, 186, 187, 188, 188, 188},
+        casting_right = {196, 197, 198, 199, 200, 201, 201, 201},
         dying = {261, 262, 263, 264, 265, 266}
     }
 end
@@ -280,7 +320,11 @@ function Character:check_occupation(x_offset, y_offset)
 end
 
 function Character:animation_loop()
-    if self.current_action == "attacking_up" or self.current_action == "attacking_down" or self.current_action == "attacking_left" or self.current_action == "attacking_right" or self.current_action == "dying" then
+    if self.current_action == "attacking_up" or self.current_action == "attacking_down" or 
+    self.current_action == "attacking_left" or self.current_action == "attacking_right" or 
+    self.current_action == "casting_up" or self.current_action == "casting_down" or 
+    self.current_action == "casting_left" or self.current_action == "casting_right" or 
+    self.current_action == "dying" then
         return false
     end
     return true 
