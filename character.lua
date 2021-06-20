@@ -2,6 +2,7 @@ Character = Object:extend()
 
 function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy)
     require "bullet"
+    require "debuff"
 
     character_sheet = love.graphics.newImage("base_character.png")
     character_frames = {}
@@ -120,10 +121,6 @@ function Character:cycle_frames(dt, current_enemies)
             for index, enemy in ipairs(current_enemies) do
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
             end
-        elseif self.attacks[self.current_weapon]["type"] == "Ranged" and self.bullet_is_present == false then
-            for index, enemy in ipairs(current_enemies) do
-                enemy:begin_turn(self.current_x_tile, self.current_y_tile)
-            end
         elseif self.attacks[self.current_weapon]["type"] == "Buff" then
             for index, enemy in ipairs(current_enemies) do
                 enemy:begin_turn(self.current_x_tile, self.current_y_tile)
@@ -169,6 +166,10 @@ function Character:change_movement_animation(key)
         self.bullet_is_present = true
     elseif key == "up" and self.attacks[self.current_weapon]["type"] == "Buff" then
         self.animation_state = "casting_up"
+    elseif key == "up" and self.attacks[self.current_weapon]["type"] == "Debuff" then
+        self.animation_state = "casting_up"
+        bullet = Debuff(self.x, self.y, "up", 2)
+        self.bullet_is_present = true
     elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_down"
     elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Ranged" then
@@ -177,6 +178,10 @@ function Character:change_movement_animation(key)
         self.bullet_is_present = true
     elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Buff" then
         self.animation_state = "casting_down"
+    elseif key == "down" and self.attacks[self.current_weapon]["type"] == "Debuff" then
+        self.animation_state = "casting_down"
+        bullet = Debuff(self.x, self.y, "down", 2)
+        self.bullet_is_present = true
     elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_left"
     elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Ranged" then
@@ -185,6 +190,10 @@ function Character:change_movement_animation(key)
         self.bullet_is_present = true
     elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Buff" then
         self.animation_state = "casting_left"
+    elseif key == "left" and self.attacks[self.current_weapon]["type"] == "Debuff" then
+        self.animation_state = "casting_left"
+        bullet = Debuff(self.x, self.y, "left", 2)
+        self.bullet_is_present = true
     elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Attack" then
         self.animation_state = "attacking_right"
     elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Ranged" then
@@ -193,6 +202,10 @@ function Character:change_movement_animation(key)
         self.bullet_is_present = true
     elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Buff" then
         self.animation_state = "casting_right"
+    elseif key == "right" and self.attacks[self.current_weapon]["type"] == "Debuff" then
+        self.animation_state = "casting_right"
+        bullet = Debuff(self.x, self.y, "right", 2)
+        self.bullet_is_present = true
     end
 end
 
@@ -279,7 +292,7 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     self:change_movement_animation(key)
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         self.current_action = "attacking_" .. key
-    elseif self.attacks[self.current_weapon]["type"] == "Ranged" or self.attacks[self.current_weapon]["type"] == "Buff" then
+    elseif self.attacks[self.current_weapon]["type"] == "Ranged" or self.attacks[self.current_weapon]["type"] == "Buff" or self.attacks[self.current_weapon]["type"] == "Debuff" then
         self.current_action = "casting_" .. key
     end
 
@@ -291,7 +304,8 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         for index, enemy in ipairs(current_enemies) do
             if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 and self:check_occupation(x_offset, y_offset) == false then
-                enemy.health = enemy.health - self:calculate_damage(enemy)
+                local damage = self:calculate_damage(enemy)
+                enemy.health = enemy.health - (damage - (damage * enemy.defense))
                 if enemy.health <= 0 then
                     enemy.animation_state = "dead"
                     enemy.health = 0
@@ -324,6 +338,10 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
             for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
                 effect["effect_function"]()
             end
+        end
+    elseif self.attacks[self.current_weapon]["type"] == "Debuff" then
+        for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+            effect["effect_function"]()
         end
     end
 end
@@ -364,7 +382,6 @@ function Character:check_occupation(x_offset, y_offset)
     if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 then
         return false
     elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
-        love.graphics.setColor(1, 0, 0)
         return false
     else
         return true

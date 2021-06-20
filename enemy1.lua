@@ -21,6 +21,9 @@ end
 function Enemy1:draw()
     love.graphics.draw(enemy1_sheet, enemy1_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
     love.graphics.setColor(1, 0, 0)
+    if #self.active_buffs > 0 then
+        love.graphics.setColor(0, 0, 0)
+    end
     love.graphics.rectangle("fill", self.x, self.y + 64, self.health / self.max_health * 66, 5)
     love.graphics.setColor(1, 1, 1)
 end

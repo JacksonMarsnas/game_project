@@ -8,6 +8,7 @@ function Enemy:new(starting_x, starting_y)
     self.current_frame = 1
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
+    self.active_buffs = {}
     sprite_dimensions = 64
 
     occupation_map[self.current_y][self.current_x] = true
@@ -82,6 +83,14 @@ function Enemy:move(dt)
 end
 
 function Enemy:begin_turn(player_x_tile, player_y_tile)
+    for index, buff in ipairs(self.active_buffs) do
+        buff.duration = buff.duration - 1
+        if buff.duration <= 0 then
+            buff["revert"](self)
+            table.remove(self.active_buffs, index)
+        end
+    end
+
     if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile) == true then
         local x_difference = self.current_x - player_x_tile
         local y_difference = self.current_y - player_y_tile

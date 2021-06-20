@@ -2,6 +2,7 @@ Moves = Object:extend()
 
 function Moves:new()
     self:create_buffs()
+    self:create_debuffs()
 
     self.all_moves = {
         {
@@ -118,7 +119,18 @@ function Moves:new()
                 effects.all_effects[1]
             },
             description = "An attack that scales somewhat with the wielder's strength and skill"
-        },
+        }, {
+            name = "Debuff",
+            type = "Debuff",
+            base_buff = self.debuffs["debuff"],
+            range = 2,
+            stamina = 20,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            description = "A passive technique that heals the user moderately based on their holyness"
+        }
     }
 end
 
@@ -145,6 +157,22 @@ function Moves:create_buffs()
             end,
             revert = function()
                 player.skill = player.base_skill
+            end
+        }
+    }
+end
+
+function Moves:create_debuffs()
+    self.debuffs = {
+        debuff = {
+            name = "debuff",
+            duration = 5,
+            buff = function(enemy)
+                enemy.base_defense = enemy.defense
+                enemy.defense = enemy.defense - (0.005 * player.arcane + 0.005 * player.holy)
+            end,
+            revert = function(enemy)
+                enemy.defense = enemy.base_defense
             end
         }
     }
