@@ -9,6 +9,7 @@ function Enemy:new(starting_x, starting_y)
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
     self.active_buffs = {}
+    self.animations = self:create_animations() 
     sprite_dimensions = 64
 
     occupation_map[self.current_y][self.current_x] = true
@@ -21,7 +22,7 @@ function Enemy:update(dt)
             self:move(dt)
         end
     else
-        if self.current_frame < 5 then
+        if self.current_frame < #self.animations["dead"] then
             self.current_frame = self.current_frame + 1 * dt * self.speed_multiplier
         end
     end
@@ -83,13 +84,7 @@ function Enemy:move(dt)
 end
 
 function Enemy:begin_turn(player_x_tile, player_y_tile)
-    for index, buff in ipairs(self.active_buffs) do
-        buff.duration = buff.duration - 1
-        if buff.duration <= 0 then
-            buff["revert"](self)
-            table.remove(self.active_buffs, index)
-        end
-    end
+    self:decrement_buffs()
 
     if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile) == true then
         local x_difference = self.current_x - player_x_tile
@@ -99,55 +94,73 @@ function Enemy:begin_turn(player_x_tile, player_y_tile)
         if (math.abs(x_difference) == 1 and math.abs(y_difference) == 0) or (math.abs(y_difference) == 1 and math.abs(x_difference) == 0) then
             self:attack(x_difference, y_difference)
         elseif math.abs(x_difference) > math.abs(y_difference) then
-            if x_difference < 0 then
-                if self:check_occupation(1, 0) == true then
-                    self.animation_state = "walking_right"
-                    self.current_x = self.current_x + 1
-                elseif y_difference < 0 and self:check_occupation(0, 1) == true then
-                    self.animation_state = "walking_down"
-                    self.current_y = self.current_y + 1
-                elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
-                    self.animation_state = "walking_up"
-                    self.current_y = self.current_y - 1
-                end
-            elseif x_difference >= 0 then
-                if self:check_occupation(-1, 0) == true then
-                    self.animation_state = "walking_left"
-                    self.current_x = self.current_x - 1
-                elseif y_difference < 0 and self:check_occupation(0, 1) == true then
-                    self.animation_state = "walking_down"
-                    self.current_y = self.current_y + 1
-                elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
-                    self.animation_state = "walking_up"
-                    self.current_y = self.current_y - 1
-                end
-            end
+            self:move_horizontal(x_difference, y_difference)
         else
-            if y_difference < 0 then
-                if self:check_occupation(0, 1) == true then
-                    self.animation_state = "walking_down"
-                    self.current_y = self.current_y + 1
-                elseif x_difference < 0 and self:check_occupation(1, 0) == true then
-                    self.animation_state = "walking_right"
-                    self.current_x = self.current_x + 1
-                elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
-                    self.animation_state = "walking_left"
-                    self.current_x = self.current_x - 1
-                end
-            elseif y_difference >= 0 then
-                if self:check_occupation(0, -1) == true then
-                    self.animation_state = "walking_up"
-                    self.current_y = self.current_y - 1
-                elseif x_difference < 0 and self:check_occupation(1, 0) == true then
-                    self.animation_state = "walking_right"
-                    self.current_x = self.current_x + 1
-                elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
-                    self.animation_state = "walking_left"
-                    self.current_x = self.current_x - 1
-                end
-            end
+            self:move_vertical(x_difference, y_difference)
         end
         occupation_map[self.current_y][self.current_x] = true
+    end
+end
+
+function Enemy:decrement_buffs()
+    for index, buff in ipairs(self.active_buffs) do
+        buff.duration = buff.duration - 1
+        if buff.duration <= 0 then
+            buff["revert"](self)
+            table.remove(self.active_buffs, index)
+        end
+    end
+end
+
+function Enemy:move_horizontal(x_difference, y_difference)
+    if x_difference < 0 then
+        if self:check_occupation(1, 0) == true then
+            self.animation_state = "walking_right"
+            self.current_x = self.current_x + 1
+        elseif y_difference < 0 and self:check_occupation(0, 1) == true then
+            self.animation_state = "walking_down"
+            self.current_y = self.current_y + 1
+        elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
+            self.animation_state = "walking_up"
+            self.current_y = self.current_y - 1
+        end
+    elseif x_difference >= 0 then
+        if self:check_occupation(-1, 0) == true then
+            self.animation_state = "walking_left"
+            self.current_x = self.current_x - 1
+        elseif y_difference < 0 and self:check_occupation(0, 1) == true then
+            self.animation_state = "walking_down"
+            self.current_y = self.current_y + 1
+        elseif y_difference >= 0 and self:check_occupation(0, -1) == true then
+            self.animation_state = "walking_up"
+            self.current_y = self.current_y - 1
+        end
+    end
+end
+
+function Enemy:move_vertical(x_difference, y_difference)
+    if y_difference < 0 then
+        if self:check_occupation(0, 1) == true then
+            self.animation_state = "walking_down"
+            self.current_y = self.current_y + 1
+        elseif x_difference < 0 and self:check_occupation(1, 0) == true then
+            self.animation_state = "walking_right"
+            self.current_x = self.current_x + 1
+        elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
+            self.animation_state = "walking_left"
+            self.current_x = self.current_x - 1
+        end
+    elseif y_difference >= 0 then
+        if self:check_occupation(0, -1) == true then
+            self.animation_state = "walking_up"
+            self.current_y = self.current_y - 1
+        elseif x_difference < 0 and self:check_occupation(1, 0) == true then
+            self.animation_state = "walking_right"
+            self.current_x = self.current_x + 1
+        elseif x_difference >= 0 and self:check_occupation(-1, 0) == true then
+            self.animation_state = "walking_left"
+            self.current_x = self.current_x - 1
+        end
     end
 end
 

@@ -4,8 +4,7 @@ function Enemy1:new(starting_x, starting_y)
     Enemy1.super.new(self, starting_x, starting_y)
     enemy1_sheet = love.graphics.newImage("enemy_1.png")
     enemy1_frames = {}
-
-    self.animations = self:create_animations()  
+ 
     self.max_health = 50
     self.health = self.max_health
     self.defense = 0.05

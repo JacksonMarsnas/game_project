@@ -52,8 +52,6 @@ function love.update(dt)
             enemy:update(dt)
         end
     end
-
-    
 end
 
 function love.draw()

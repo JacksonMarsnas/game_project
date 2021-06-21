@@ -4,6 +4,13 @@ function Select_Attacks_Screen:new()
     Select_Attacks_Screen.super.new(self)
     self.screen_top = 0
     self.filter_state = "All"
+
+    attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
+    attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
+    attacks_description = love.graphics.newFont("ARCADECLASSIC.TTF", 24)
+    attacks_description:setFilter( "nearest", "nearest" )
+    attacks_header:setFilter( "nearest", "nearest" )
+    attacks_text:setFilter( "nearest", "nearest" )
 end
 
 function Select_Attacks_Screen:update()
@@ -12,16 +19,21 @@ end
 
 function Select_Attacks_Screen:draw()
     love.graphics.translate(0, self.screen_top)
-    local attacks_header = love.graphics.newFont("ARCADECLASSIC.TTF", 64)
-    attacks_text = love.graphics.newFont("ARCADECLASSIC.TTF", 32)
-    local attacks_description = love.graphics.newFont("ARCADECLASSIC.TTF", 24)
-    attacks_description:setFilter( "nearest", "nearest" )
-    attacks_header:setFilter( "nearest", "nearest" )
-    attacks_text:setFilter( "nearest", "nearest" )
     love.graphics.setFont(attacks_header)
     love.graphics.printf("SELECT YOUR MOVES", 0, 128, 960, "center")
     love.graphics.setFont(attacks_text)
 
+    self:filter()
+    self:make_filter_options()
+
+    for index, attack in ipairs(moves_list) do
+        love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
+        love.graphics.setFont(attacks_description)
+        love.graphics.printf(attack.all_info.description, 0, attack.y + 48, 960, "center")
+    end
+end
+
+function Select_Attacks_Screen:filter()
     if self.filter_state == "All" then
         self:filter_all()
     elseif self.filter_state == "Melee" then
@@ -33,7 +45,9 @@ function Select_Attacks_Screen:draw()
     elseif self.filter_state == "Debuffs" then
         self:filter_debuffs()
     end
+end
 
+function Select_Attacks_Screen:make_filter_options()
     filter_options = {}
     filter_labels = {"All", "Melee", "Ranged", "Buffs", "Debuffs"}
     for index, option in ipairs(filter_labels) do
@@ -46,24 +60,26 @@ function Select_Attacks_Screen:draw()
     for index, option in ipairs(filter_options) do
         love.graphics.draw(option.text, option.x - option.text:getWidth() / 2, option.y)
     end
-
-    for index, attack in ipairs(moves_list) do
-        love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
-        love.graphics.setFont(attacks_description)
-        love.graphics.printf(attack.all_info.description, 0, attack.y + 48, 960, "center")
-    end
 end
 
 function Select_Attacks_Screen:mouseClicked(x, y, button)
+    self:filter_clicked(x, y, button)
+    self:attack_clicked(x, y, button)
+end
+
+function Select_Attacks_Screen:filter_clicked(x, y, button)
     for index, option in ipairs(filter_options) do
         if love.mouse.getX() >= option.x - option.text:getWidth() / 2 and love.mouse.getX() <= option.x + option.text:getWidth() / 2 and love.mouse.getY() >= option.y + self.screen_top and love.mouse.getY() <= option.y + option.text:getHeight() + self.screen_top then
             self.filter_state = option.label
         end
     end
+end
 
+function Select_Attacks_Screen:attack_clicked(x, y, button)
     for index, attack in ipairs(moves_list) do
         if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y + self.screen_top and love.mouse.getY() <= attack.y + attack.text:getHeight() + self.screen_top then
             player.attacks[current_attack_slot] = attack["all_info"]
+            self.screen_top = 0
             game_state = "augmentation_screen"
         end
     end

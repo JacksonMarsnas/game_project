@@ -14,6 +14,14 @@ function Augmentation_Screen:draw()
     love.graphics.printf("SELECT YOUR AUGMENTATIONS", 0, 128, 960, "center")
     love.graphics.setFont(augment_text)
 
+    self:setup_table(augment_text)
+
+    for index, augment in ipairs(augment_list) do
+        love.graphics.draw(augment.text, augment.x - augment.text:getWidth() / 2, augment.y)
+    end
+end
+
+function Augmentation_Screen:setup_table(augment_text)
     augment_list = {}
     for index, augment in ipairs(effects.all_effects) do
         table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
@@ -22,10 +30,6 @@ function Augmentation_Screen:draw()
         id = index,
         all_info = augment
     })
-    end
-
-    for index, augment in ipairs(augment_list) do
-        love.graphics.draw(augment.text, augment.x - augment.text:getWidth() / 2, augment.y)
     end
 end
 
