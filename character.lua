@@ -491,12 +491,8 @@ function Character:animation_loop()
 end
 
 function Character:take_damage(damage_taken)
-    self.health = self.health - (damage_taken - (damage_taken * self.defense))
-    if self.health - self.stamina <= 0 then
-        self.health = 0
-        self.current_action = "dying"
-        self.animation_state = "dying"
-    end
+    dodge_action = Dodge_Sequence(damage_taken)
+    game_state = "dodging"
 end
 
 function Character:swap_weapons()

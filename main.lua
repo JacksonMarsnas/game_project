@@ -15,6 +15,7 @@ function love.load()
     require "effects"
     require "augmentation_screen"
     require "attack_sequence"
+    require "dodge_sequence"
 
     current_attack_slot = 1
     window_width = 960
@@ -54,6 +55,8 @@ function love.update(dt)
         end
     elseif game_state == "attacking" then
         attack_action:update(dt)
+    elseif game_state == "dodging" then
+        dodge_action:update(dt)
     end
 end
 
@@ -69,6 +72,11 @@ function love.draw()
         all_maps[player.current_map]:draw()
         player:draw()
         attack_action:draw()
+    elseif game_state == "dodging" then
+        love.graphics.setFont(myFont)
+        all_maps[player.current_map]:draw()
+        player:draw()
+        dodge_action:draw()
     elseif game_state == "pause" then
         pause_screen:draw()
     elseif game_state == "equipped_attacks" then
@@ -83,6 +91,8 @@ end
 function love.keypressed(key)
     if key == "space" and game_state == "attacking" then
         attack_action:damage()
+    elseif key == "space" and game_state == "dodging" then
+        dodge_action:damage()
     end
 
     if game_state ~= "character_select" then
