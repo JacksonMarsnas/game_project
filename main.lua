@@ -14,6 +14,7 @@ function love.load()
     require "select_attacks_screen"
     require "effects"
     require "augmentation_screen"
+    require "attack_sequence"
 
     current_attack_slot = 1
     window_width = 960
@@ -51,6 +52,8 @@ function love.update(dt)
         for index, enemy in ipairs(map1.enemies) do
             enemy:update(dt)
         end
+    elseif game_state == "attacking" then
+        attack_action:update(dt)
     end
 end
 
@@ -61,6 +64,11 @@ function love.draw()
         love.graphics.setFont(myFont)
         all_maps[player.current_map]:draw()
         player:draw()
+    elseif game_state == "attacking" then
+        love.graphics.setFont(myFont)
+        all_maps[player.current_map]:draw()
+        player:draw()
+        attack_action:draw()
     elseif game_state == "pause" then
         pause_screen:draw()
     elseif game_state == "equipped_attacks" then
@@ -73,6 +81,10 @@ function love.draw()
 end
 
 function love.keypressed(key)
+    if key == "space" and game_state == "attacking" then
+        attack_action:damage()
+    end
+
     if game_state ~= "character_select" then
         if player.health > 0 and player.current_action == "none" then
             local allow_player_action = true

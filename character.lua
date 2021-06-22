@@ -47,7 +47,7 @@ function Character:draw()
         if (self.animation_state == "casting_up" or self.animation_state == "casting_down" or self.animation_state == "casting_left" or self.animation_state == "casting_right") and self.attacks[self.current_weapon]["type"] == "Buff" then
             love.graphics.draw(projectiles_sheet, projectile_frames[3], self.x, self.y)
         end
-        
+
         love.graphics.setFont(nav_font)
         love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
         self:draw_navbar()
@@ -406,14 +406,8 @@ end
 function Character:melee_attack(x_offset, y_offset, current_enemies)
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 and self:check_occupation(x_offset, y_offset) == false then
-            local damage = self:calculate_damage(enemy)
-            enemy.health = enemy.health - (damage - (damage * enemy.defense))
-            if enemy.health <= 0 then
-                enemy.animation_state = "dead"
-                enemy.health = 0
-                occupation_map[enemy.current_y][enemy.current_x] = false
-            end
-            self:execute_effects()
+            attack_action = Attack_Sequence(enemy)
+            game_state = "attacking"
         end
     end
 end
