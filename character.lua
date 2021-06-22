@@ -44,6 +44,10 @@ end
 
 function Character:draw()
     if self.stop_drawing ~= true then
+        if (self.animation_state == "casting_up" or self.animation_state == "casting_down" or self.animation_state == "casting_left" or self.animation_state == "casting_right") and self.attacks[self.current_weapon]["type"] == "Buff" then
+            love.graphics.draw(projectiles_sheet, projectile_frames[3], self.x, self.y)
+        end
+        
         love.graphics.setFont(nav_font)
         love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
         self:draw_navbar()
@@ -87,6 +91,12 @@ function Character:create_sprites()
         for j = 0, 12 do
             table.insert(character_frames, love.graphics.newQuad(j * sprite_dimensions, i * sprite_dimensions, sprite_dimensions, sprite_dimensions, character_sheet:getWidth(), character_sheet:getHeight()))
         end
+    end
+
+    projectiles_sheet = love.graphics.newImage("projectiles.png")
+    projectile_frames = {}
+    for i = 0, 2 do
+        table.insert(projectile_frames, love.graphics.newQuad(i * 64, 0, 64, 64, projectiles_sheet:getWidth(), projectiles_sheet:getHeight()))
     end
 end
 

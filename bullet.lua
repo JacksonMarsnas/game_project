@@ -15,7 +15,7 @@ function Bullet:update(dt, current_enemies)
 end
 
 function Bullet:draw()
-    love.graphics.rectangle("fill", self.x, self.y, 64, 64)
+    love.graphics.draw(projectiles_sheet, projectile_frames[1], self.x, self.y)
 end
 
 function Bullet:range_limit_check(dt, current_enemies)

@@ -35,7 +35,7 @@ function Debuff:update(dt, current_enemies)
 end
 
 function Debuff:draw()
-    love.graphics.rectangle("fill", self.x, self.y, 64, 64)
+    love.graphics.draw(projectiles_sheet, projectile_frames[2], self.x, self.y)
 end
 
 function Debuff:begin_enemy_turn(current_enemies)
