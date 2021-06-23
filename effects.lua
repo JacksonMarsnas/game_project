@@ -170,7 +170,7 @@ function Effects:debuff_only_effects()
             effect_function = function(enemy) 
                 enemy.base_defense = enemy.defense
                 enemy.defense = -100
-                self:insert_debuff(3, function(enemy) enemy.defense = enemy.base_defense end, "Wither", enemy)
+                self:insert_debuff(3, function(enemy) enemy.defense = enemy.base_defense end, "Wither", enemy, function() end)
             end,
             description = "Effect: Increase strength",
             heavy_description = "Increase the wielder's strength by 50"
@@ -186,7 +186,7 @@ function Effects:permanent_effects()
                 player.damage_multiplier = 0
                 player.base_defense = player.defense
                 player.defense = player.defense - 0.5
-                self:insert_buff(3, 
+                self:insert_buff(5, 
                 function() 
                     player.defense = player.base_defense
                     player.damage_multiplier = 1
@@ -197,7 +197,7 @@ function Effects:permanent_effects()
     }
 end
 
-function Effects:insert_buff(duration, revert, name, code)
+function Effects:insert_buff(duration, revert, name, code, recurring_buff)
     local buff_used = false
     for index, buff in ipairs(player.active_buffs) do
         if name == buff["name"] then
@@ -209,12 +209,13 @@ function Effects:insert_buff(duration, revert, name, code)
             duration = duration,
             revert = revert,
             name = name,
-            code = code
+            code = code,
+            recurring_buff = recurring_buff
         })
     end
 end
 
-function Effects:insert_debuff(duration, revert, name, enemy)
+function Effects:insert_debuff(duration, revert, name, enemy, recurring_buff)
     local buff_used = false
     for index, buff in ipairs(enemy.active_buffs) do
         if name == buff["name"] then
@@ -225,7 +226,8 @@ function Effects:insert_debuff(duration, revert, name, enemy)
     if buff_used == false then
         table.insert(enemy.active_buffs, {
             duration = duration,
-            revert = revert
+            revert = revert,
+            recurring_buff = recurring_buff
         })
     end
 end

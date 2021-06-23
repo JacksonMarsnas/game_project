@@ -177,6 +177,18 @@ function Moves:new()
             },
             permanent_effects = {},
             description = "A passive technique that heals the user moderately based on their holyness"
+        }, {
+            name = "Burn",
+            type = "Debuff",
+            base_buff = self.debuffs["burn"],
+            range = 2,
+            stamina = 20,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            description = "A passive technique that heals the user moderately based on their holyness"
         }
     }
 end
@@ -196,6 +208,7 @@ function Moves:create_buffs()
                 player.base_strength = player.strength
                 player.strength = player.strength * 2
             end,
+            recurring_buff = function() end,
             revert = function()
                 player.strength = player.base_strength
             end
@@ -212,6 +225,7 @@ function Moves:create_buffs()
                 player.base_skill = player.skill
                 player.skill = 50
             end,
+            recurring_buff = function() end,
             revert = function()
                 player.skill = player.base_skill
             end
@@ -222,20 +236,29 @@ end
 function Moves:create_debuffs()
     self.debuffs = {
         debuff = {
-            name = "debuff",
+            name = "Debuff",
             duration = 5,
-            slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
             buff = function(enemy)
                 enemy.base_defense = enemy.defense
                 enemy.defense = enemy.defense - (0.005 * player.arcane + 0.005 * player.holy)
             end,
+            recurring_buff = function() end,
             revert = function(enemy)
                 enemy.defense = enemy.base_defense
             end
-        }
+        }, burn = {
+            name = "Burn",
+            duration = 4,
+            buff = function(enemy)
+                enemy.base_attack_power = enemy.attack_power
+                enemy.attack_power = enemy.attack_power - (0.3 * enemy.attack_power)
+            end,
+            recurring_buff = function(enemy)
+                enemy.health = enemy.health - (0.1 * enemy.health)
+            end,
+            revert = function(enemy)
+                enemy.attack_power = enemy.base_attack_power
+            end
+        },
     }
 end

@@ -104,6 +104,7 @@ end
 
 function Enemy:decrement_buffs()
     for index, buff in ipairs(self.active_buffs) do
+        buff["recurring_buff"](self)
         buff.duration = buff.duration - 1
         if buff.duration <= 0 then
             buff["revert"](self)
