@@ -1,6 +1,6 @@
 Character = Object:extend()
 
-function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy)
+function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy, new_agility)
     require "bullet"
     require "debuff"
 
@@ -27,6 +27,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.bullet_is_present = false
     self.regen_check = true
     self.active_buffs = {}
+    self.damage_multiplier = 1
 
     self.max_health = new_health
     self.health = self.max_health
@@ -40,6 +41,8 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.base_arcane = self.arcane
     self.holy = new_holy
     self.base_holy = self.holy 
+    self.agility = new_agility
+    self.base_agility = self.agility
 end
 
 function Character:draw()
@@ -73,11 +76,20 @@ end
 
 function Character:draw_effects()
     love.graphics.setFont(effect_font)
-    for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+    for index, effect in ipairs(self.attacks[self.current_weapon]["permanent_effects"]) do
         if index <= 2 then
             love.graphics.print(effect["description"], 540, 910 + index * 48 - 48)
         else
             love.graphics.print(effect["description"], 740, 910 + index * 48 - 144)
+        end
+    end
+
+    local permanent_effects_length = #self.attacks[self.current_weapon]["permanent_effects"]
+    for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
+        if index <= 2 then
+            love.graphics.print(effect["description"], 540, 910 + (index + permanent_effects_length) * 48 - 48)
+        else
+            love.graphics.print(effect["description"], 740, 910 + (index + permanent_effects_length) * 48 - 144)
         end
     end
 end
@@ -375,6 +387,8 @@ function Character:decrement_buffs()
         if buff.duration <= 0 then
             buff["revert"]()
             table.remove(self.active_buffs, index)
+            self:decrement_buffs()
+            break
         end
     end
 end
@@ -395,18 +409,18 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         self:melee_attack(x_offset, y_offset, current_enemies)
     elseif self.attacks[self.current_weapon]["type"] == "Ranged" then
-        self:execute_effects()
+        
     elseif self.attacks[self.current_weapon]["type"] == "Buff" then
         self:buff_used()
     elseif self.attacks[self.current_weapon]["type"] == "Debuff" then
-        self:execute_effects()
+        
     end
 end
 
 function Character:melee_attack(x_offset, y_offset, current_enemies)
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 and self:check_occupation(x_offset, y_offset) == false then
-            attack_action = Attack_Sequence(enemy)
+            attack_action = Attack_Sequence(enemy, self.attacks[self.current_weapon]["multipliers"])
             game_state = "attacking"
         end
     end
@@ -431,9 +445,12 @@ function Character:buff_used()
     end
 end
 
-function Character:execute_effects()
+function Character:execute_effects(enemy)
     for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
-        effect["effect_function"]()
+        effect["effect_function"](enemy)
+    end
+    for index, effect in ipairs(self.attacks[self.current_weapon]["permanent_effects"]) do
+        effect["effect_function"](enemy)
     end
 end
 
@@ -444,7 +461,7 @@ function Character:calculate_damage(enemy)
     damage = damage + self.attacks[self.current_weapon]["scaling"]["arcane"] * self.arcane
     damage = damage + self.attacks[self.current_weapon]["scaling"]["holy"] * self.holy    
 
-    return damage
+    return damage * self.damage_multiplier
 end
 
 function Character:create_animations()
@@ -490,8 +507,8 @@ function Character:animation_loop()
     return true 
 end
 
-function Character:take_damage(damage_taken)
-    dodge_action = Dodge_Sequence(damage_taken)
+function Character:take_damage(damage_taken, enemy_agility)
+    dodge_action = Dodge_Sequence(damage_taken, enemy_agility)
     game_state = "dodging"
 end
 

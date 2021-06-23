@@ -32,6 +32,7 @@ function Character_Select_Screen:make_character_list()
         skill = current_character["skill"],
         arcane = current_character["arcane"],
         holy = current_character["holy"],
+        agility = current_character["agility"],
         x = 20,
         y = 256 + index * 64,
         selected = false})
@@ -56,6 +57,7 @@ function Character_Select_Screen:draw_characters()
             love.graphics.print("Skill: " .. current_character.skill, 500, 450)
             love.graphics.print("Arcane: " .. current_character.arcane, 500, 500)
             love.graphics.print("Holy: " .. current_character.holy, 500, 550)
+            love.graphics.print("Agility: " .. current_character.agility, 500, 600)
         end
     end
 end
@@ -78,7 +80,7 @@ function Character_Select_Screen:click_start_button(x, y, button)
     if love.mouse.getX() >= start_button["x"] and love.mouse.getX() <= start_button["x"] + start_button.text:getWidth() and love.mouse.getY() >= start_button["y"] and love.mouse.getY() <= start_button["y"] + start_button.text:getHeight() then
         for index, current_character in ipairs(character_list) do
             if current_character["selected"] == true then
-                player = Character(current_character.health, current_character.strength, current_character.skill, current_character.arcane, current_character.holy)
+                player = Character(current_character.health, current_character.strength, current_character.skill, current_character.arcane, current_character.holy, current_character.agility)
                 player.attacks = {moves.all_moves[1], moves.all_moves[9], moves.all_moves[8]}
                 game_state = "play"
             end

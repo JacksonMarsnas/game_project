@@ -80,6 +80,17 @@ function Select_Attacks_Screen:attack_clicked(x, y, button)
         if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y + self.screen_top and love.mouse.getY() <= attack.y + attack.text:getHeight() + self.screen_top then
             player.attacks[current_attack_slot] = attack["all_info"]
             self.screen_top = 0
+
+            if attack["all_info"]["type"] == "Attack" then
+                effects:melee_only_effects()
+            elseif attack["all_info"]["type"] == "Ranged" then
+                effects:ranged_only_effects()
+            elseif attack["all_info"]["type"] == "Buff" then
+                effects:buff_only_effects()
+            elseif attack["all_info"]["type"] == "Debuff" then
+                effects:debuff_only_effects()
+            end
+            
             game_state = "augmentation_screen"
         end
     end

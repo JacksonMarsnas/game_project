@@ -56,6 +56,7 @@ function Debuff:collision(current_enemies)
     for index, enemy in ipairs(current_enemies) do
         if x_tile == enemy.current_x and y_tile == enemy.current_y and enemy.health > 0 then
             self:apply_debuff(enemy, x_tile, y_tile)
+            player:execute_effects(enemy)
             self:begin_enemy_turn(current_enemies)
         end
     end
@@ -70,9 +71,6 @@ function Debuff:apply_debuff(enemy, x_tile, y_tile)
             duration = player.attacks[player.current_weapon]["base_buff"]["duration"],
             revert = player.attacks[player.current_weapon]["base_buff"]["revert"]
         })
-        for index, effect in ipairs(player.attacks[player.current_weapon]["effect"]) do
-            effect["effect_function"]()
-        end
     end
 end
 

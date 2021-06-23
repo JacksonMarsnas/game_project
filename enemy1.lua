@@ -9,6 +9,8 @@ function Enemy1:new(starting_x, starting_y)
     self.health = self.max_health
     self.defense = 0.05
     self.attack_power = 20
+    self.agility = 2
+    self.blocking = 2
 
     for i = 0, 20 do
         for j = 0, 12 do

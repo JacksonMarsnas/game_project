@@ -33,7 +33,7 @@ function Enemy:animation_cycle(dt)
     if self.current_frame > #self.animations[self.animation_state] then
         self.current_frame = 1
         if self.animation_state == "attacking_up" or self.animation_state == "attacking_down" or self.animation_state == "attacking_left" or self.animation_state == "attacking_right" then
-            player:take_damage(self.attack_power)
+            player:take_damage(self.attack_power, self.agility)
             if self.animation_state == "attacking_up" then
                 self.animation_state = "idle_up"
             elseif self.animation_state == "attacking_down" then

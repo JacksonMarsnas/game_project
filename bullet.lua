@@ -65,7 +65,7 @@ function Bullet:enemy_collision(x_tile, y_tile, current_enemies)
     for index, enemy in ipairs(current_enemies) do
         if x_tile == enemy.current_x and y_tile == enemy.current_y and enemy.health > 0 then
             player.bullet_is_present = false
-            attack_action = Attack_Sequence(enemy)
+            attack_action = Attack_Sequence(enemy, player.attacks[player.current_weapon]["multipliers"])
             game_state = "attacking"
             if enemy.health <= 0 then
                 enemy.animation_state = "dead"

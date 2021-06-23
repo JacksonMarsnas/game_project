@@ -1,19 +1,36 @@
 Dodge_Sequence = Object:extend()
 
-function Dodge_Sequence:new(damage_taken)
+function Dodge_Sequence:new(damage_taken, enemy_agility)
     self.x = 480
     self.y = 700
     self.width = 300
     self.height = 64
-    self.crit = 64
-    self.normal_attack = 160
-    self.weak_attack = 256
+    self.crit = 15 + math.floor(player.agility * 0.75) - math.floor(enemy_agility * 0.75)
+    self.normal_attack = 15 + math.floor(player.agility * 1.5) - math.floor(enemy_agility * 1.5) + self.crit
+    self.weak_attack = 15 + (player.agility * 2.25) - (enemy_agility * 2.25) + self.normal_attack
     self.selector = self.x - (self.width / 2)
     self.damage_taken = damage_taken
+    self.speed = 300 - player.agility * 3 + enemy_agility * 3
+
+    if self.crit < 5 then
+        self.crit = 5
+    elseif self.crit > 300 then
+        self.crit = 300
+    end
+    if self.normal_attack < 10 then
+        self.normal_attack = 10
+    elseif self.normal_attack > 300 then
+        self.normal_attack = 300
+    end
+    if self.weak_attack < 15 then
+        self.weak_attack = 15
+    elseif self.weak_attack > 300 then
+        self.weak_attack = 300
+    end
 end
 
 function Dodge_Sequence:update(dt)
-    self.selector = self.selector + 200 * dt
+    self.selector = self.selector + self.speed * dt
     if self.selector >= self.x - (self.width / 2) + self.width then
         player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1.5)
         if player.health - player.stamina <= 0 then

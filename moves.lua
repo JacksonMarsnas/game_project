@@ -17,12 +17,19 @@ function Moves:new()
                 arcane = 0,
                 holy = 0
             },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
             effect = {effects.all_effects[1]},
+            permanent_effects = {},
             description = "An attack that scales well with the wielder's strength"
         }, {
             name = "Skill Move",
             type = "Attack",
-            base_damage = 20,
+            base_damage = 0,
             stamina = 30,
             slots = 1,
             scaling = {
@@ -31,7 +38,14 @@ function Moves:new()
                 arcane = 0,
                 holy = 0
             },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
             effect = {effects.all_effects[1]},
+            permanent_effects = {},
             description = "An attack that scales well with the wielder's skill"
         }, {
             name = "Arcane Move",
@@ -45,10 +59,17 @@ function Moves:new()
                 arcane = 0.5,
                 holy = 0
             },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
             effect = {
                 effects.all_effects[1],
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "An attack that scales well with the wielder's arcane"
         }, {
             name = "Holy Move",
@@ -62,9 +83,16 @@ function Moves:new()
                 arcane = 0,
                 holy = 0.5
             },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
             effect = {
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "An attack that scales well with the wielder's holyness"
         }, {
             name = "Hybrid Move",
@@ -78,9 +106,16 @@ function Moves:new()
                 arcane = 0,
                 holy = 0
             },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
             effect = {
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "An attack that scales somewhat with the wielder's strength and skill"
         }, {
             name = "Buffy McBuffFace",
@@ -91,6 +126,7 @@ function Moves:new()
             effect = {
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "A passive technique that heals the user moderately based on their holyness"
         }, {
             name = "Skill Buff",
@@ -101,24 +137,34 @@ function Moves:new()
             effect = {
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "A passive technique that heals the user moderately based on their holyness"
         }, {
-            name = "Ranged Move",
+            name = "Inner Arcanum",
             type = "Ranged",
-            base_damage = 15,
-            stamina = 30,
+            base_damage = 30,
+            stamina = 50,
             slots = 1,
             range = 2,
             scaling = {
-                strength = 0.3,
-                skill = 0.3,
-                arcane = 0,
-                holy = 0
+                strength = 0,
+                skill = 0.2,
+                arcane = 1.5,
+                holy = 0.5
+            },
+            multipliers = {
+                crit_multiplier = 1.2,
+                normal_multiplier = 1.3,
+                weak_multiplier = 1,
+                speed_multiplier = 1.2
             },
             effect = {
                 effects.all_effects[1]
             },
-            description = "An attack that scales somewhat with the wielder's strength and skill"
+            permanent_effects = {
+                effects.permanent_effects[1]
+            },
+            description = "Discover the latent arcane power within oneself, directing it outward. This technique is extremely powerful, but has harmful effects for the user.\nScaling: High Arcane. Low holy, skill"
         }, {
             name = "Debuff",
             type = "Debuff",
@@ -129,6 +175,7 @@ function Moves:new()
             effect = {
                 effects.all_effects[1]
             },
+            permanent_effects = {},
             description = "A passive technique that heals the user moderately based on their holyness"
         }
     }
@@ -140,6 +187,11 @@ function Moves:create_buffs()
             name = "bufface",
             code = "STR",
             duration = 3,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
             buff = function()
                 player.base_strength = player.strength
                 player.strength = player.strength * 2
@@ -151,6 +203,11 @@ function Moves:create_buffs()
             name = "skill buff",
             code = "SKL",
             duration = 3,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
             buff = function()
                 player.base_skill = player.skill
                 player.skill = 50
@@ -167,6 +224,11 @@ function Moves:create_debuffs()
         debuff = {
             name = "debuff",
             duration = 5,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
             buff = function(enemy)
                 enemy.base_defense = enemy.defense
                 enemy.defense = enemy.defense - (0.005 * player.arcane + 0.005 * player.holy)
