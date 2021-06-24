@@ -213,7 +213,7 @@ function Effects:permanent_effects()
                     end
                 end
             end,
-            description = "HP-"
+            description = "Effect: HP-"
         }
     }
 end

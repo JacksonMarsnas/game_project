@@ -48,15 +48,17 @@ function love.load()
 end
 
 function love.update(dt)
-    if game_state == "play" then
-        player:update(dt, map1.enemies)
-        for index, enemy in ipairs(map1.enemies) do
-            enemy:update(dt)
+    if player.current_map ~= "death_screen" then
+        if game_state == "play" then
+            player:update(dt, map1.enemies)
+            for index, enemy in ipairs(map1.enemies) do
+                enemy:update(dt)
+            end
+        elseif game_state == "attacking" then
+            attack_action:update(dt)
+        elseif game_state == "dodging" then
+            dodge_action:update(dt)
         end
-    elseif game_state == "attacking" then
-        attack_action:update(dt)
-    elseif game_state == "dodging" then
-        dodge_action:update(dt)
     end
 end
 

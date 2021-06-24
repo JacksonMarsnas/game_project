@@ -43,6 +43,7 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.base_holy = self.holy 
     self.agility = new_agility
     self.base_agility = self.agility
+    self.stamina_recovery_speed = 25
 end
 
 function Character:draw()
@@ -372,7 +373,7 @@ function Character:stamina_regen()
         end
     end
     if allow_player_action == true and self.regen_check == false and self.current_action == "none" then
-        self.stamina = self.stamina - 30
+        self.stamina = self.stamina - self.stamina_recovery_speed
         self.regen_check = true
         if self.stamina < 0 then
             self.stamina = 0

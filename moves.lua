@@ -118,27 +118,27 @@ function Moves:new()
             permanent_effects = {},
             description = "An attack that scales somewhat with the wielder's strength and skill"
         }, {
-            name = "Buffy McBuffFace",
+            name = "Fast Reflexes",
             type = "Buff",
-            base_buff = self.buffs["bufface"],
-            stamina = 300,
+            base_buff = self.buffs["fast_reflexes"],
+            stamina = 40,
             slots = 1,
             effect = {
                 effects.all_effects[1]
             },
             permanent_effects = {},
-            description = "A passive technique that heals the user moderately based on their holyness"
+            description = "A simple spell that quickens the reflexes. Makes attacking and dodging easier for a short time.\nScaling: low strength, skill, arcane, holy"
         }, {
-            name = "Skill Buff",
+            name = "Rock Steady Stance",
             type = "Buff",
-            base_buff = self.buffs["skill_buff"],
-            stamina = 0,
-            slots = 1,
+            base_buff = self.buffs["rock_steady_stance"],
+            stamina = 50,
+            slots = 2,
             effect = {
-                effects.all_effects[1]
+                effects.all_effects[1], effects.all_effects[1]
             },
             permanent_effects = {},
-            description = "A passive technique that heals the user moderately based on their holyness"
+            description = "Assume a stance to gain stone-like poise and posture. Such a stance drastically improves the defense and stamina recovery of the user, but can only be held for a very short time.\nScaling: low holy, strength"
         }, {
             name = "Inner Arcanum",
             type = "Ranged",
@@ -196,14 +196,9 @@ end
 function Moves:create_buffs()
     self.buffs = {
         bufface = {
-            name = "bufface",
             code = "STR",
             duration = 3,
             slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
             buff = function()
                 player.base_strength = player.strength
                 player.strength = player.strength * 2
@@ -212,22 +207,34 @@ function Moves:create_buffs()
             revert = function()
                 player.strength = player.base_strength
             end
-        }, skill_buff = {
-            name = "skill buff",
-            code = "SKL",
-            duration = 3,
-            slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
+        }, fast_reflexes = {
+            code = "FRL",
+            duration = (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy),
             buff = function()
-                player.base_skill = player.skill
-                player.skill = 50
+                player.base_agility = player.agility
+                player.agility = player.agility + (0.2 * player.strength) + (0.2 * player.skill) + (0.2 * player.arcane) + (0.2 * player.holy)
+                player.base_stamina_recovery_speed = player.stamina_recovery_speed
+                player.stamina_recovery_speed = player.stamina_recovery_speed + (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy)
             end,
             recurring_buff = function() end,
             revert = function()
-                player.skill = player.base_skill
+                player.agility = player.base_agility
+                player.stamina_recovery_speed = player.base_stamina_recovery_speed
+            end
+        }, rock_steady_stance = {
+            code = "RSS",
+            duration = 3 + (0.1 * player.holy) + (0.1 * player.strength),
+            buff = function()
+                player.base_defense = player.defense
+                player.agility = 80
+                player.defense = player.defense + ((0.075 * player.strength) * player.defense) + ((0.075 * player.holy) * player.defense)
+                player.base_stamina_recovery_speed = player.stamina_recovery_speed
+                player.stamina_recovery_speed = player.stamina_recovery_speed + (0.5 * player.strength) + (0.5 * player.holy)
+            end,
+            recurring_buff = function() end,
+            revert = function()
+                player.defense = player.base_defense
+                player.stamina_recovery_speed = player.base_stamina_recovery_speed
             end
         }
     }
