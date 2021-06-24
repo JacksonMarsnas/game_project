@@ -78,6 +78,13 @@ function Dodge_Sequence:damage()
             player.current_action = "dying"
             player.animation_state = "dying"
         end
+    else
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1.5)
+        if player.health - player.stamina <= 0 then
+            player.health = 0
+            player.current_action = "dying"
+            player.animation_state = "dying"
+        end
     end
     game_state = "play"
 end

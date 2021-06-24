@@ -6,30 +6,30 @@ function Moves:new()
 
     self.all_moves = {
         {
-            name = "Strength Move",
+            name = "Plow Through",
             type = "Attack",
             base_damage = 20,
-            stamina = 10,
-            slots = 1,
+            stamina = 50,
+            slots = 2,
             scaling = {
-                strength = 0.5,
+                strength = 1.5,
                 skill = 0,
                 arcane = 0,
                 holy = 0
             },
             multipliers = {
-                crit_multiplier = 1,
+                crit_multiplier = 0.5,
                 normal_multiplier = 1,
-                weak_multiplier = 1,
-                speed_multiplier = 1
+                weak_multiplier = 1.5,
+                speed_multiplier = 0.8
             },
             effect = {effects.all_effects[1]},
-            permanent_effects = {},
-            description = "An attack that scales well with the wielder's strength"
+            permanent_effects = {effects.permanent_effects[2]},
+            description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
         }, {
             name = "Skill Move",
             type = "Attack",
-            base_damage = 0,
+            base_damage = 10,
             stamina = 30,
             slots = 1,
             scaling = {
@@ -188,7 +188,7 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
-            description = "A passive technique that heals the user moderately based on their holyness"
+            description = "A spell that does no immediate harm to the target, instead leaving them with a harsh burn to the skin. The target will suffer slight damage over time, as well as a decrease in damage.\nScaling: Low holy, arcane"
         }
     }
 end
@@ -248,13 +248,13 @@ function Moves:create_debuffs()
             end
         }, burn = {
             name = "Burn",
-            duration = 4,
+            duration = 2 + math.floor(0.15 * player.holy + 0.15 * player.arcane),
             buff = function(enemy)
                 enemy.base_attack_power = enemy.attack_power
-                enemy.attack_power = enemy.attack_power - (0.3 * enemy.attack_power)
+                enemy.attack_power = enemy.attack_power - math.floor(0.1 + player.arcane + player.holy)
             end,
             recurring_buff = function(enemy)
-                enemy.health = enemy.health - (0.1 * enemy.health)
+                enemy.health = enemy.health - math.floor(2 + (0.05 * player.holy) + (0.05 * player.arcane))
             end,
             revert = function(enemy)
                 enemy.attack_power = enemy.base_attack_power

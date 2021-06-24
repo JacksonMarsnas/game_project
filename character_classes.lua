@@ -31,7 +31,7 @@ function Character_classes:new()
             health = 110,
             strength = 0,
             skill = 0,
-            arcane = 00,
+            arcane = 0,
             holy = 30,
             agility = 8
         }, {

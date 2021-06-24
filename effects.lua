@@ -33,7 +33,7 @@ function Effects:melee_only_effects()
             description = "Effect: None",
             heavy_description = "Has no effect"
         }, {
-            name = "Heal",
+            name = "Regenerating",
             scaling = {
                 strength = 0,
                 skill = 0,
@@ -47,7 +47,16 @@ function Effects:melee_only_effects()
                 end
             end,
             description = "Effect: HP+",
-            heavy_description = "Heal HP equal to 20% of the user's holyness"
+            heavy_description = "Grant your weapon weak healing properties. While this blessing is small, it is still a gift in battle.\nScaling: low holy"
+        }, {
+            name = "Inverted",
+            effect_function = function(enemy) 
+                enemy.base_defense = enemy.defense
+                enemy.defense = -1 * enemy.defense
+                self:insert_debuff(3, function(enemy) enemy.defense = enemy.base_defense end, "Inverted", enemy, function() end)
+            end,
+            description = "Effect: -DEF",
+            heavy_description = "An obscure finish used on the blade of a weapon of unknown origin. Inverts the defenses of the target for one turn."
         }
     }
 end
@@ -192,7 +201,19 @@ function Effects:permanent_effects()
                     player.damage_multiplier = 1
                 end, "Inner Arcanum", "DMG-")
             end,
-            description = "Effect: DMG-, DEF-",
+            description = "DEF-"
+        }, {
+            name = "Plow Through",
+            effect_function = function()
+                math.randomseed(os.time())
+                if math.random(1, 3) == 1 then
+                    player.health = player.health - (0.1 * player.max_health)
+                    if player.health - player.stamina <= 0 then
+                        player.health = player.stamina + 1
+                    end
+                end
+            end,
+            description = "HP-"
         }
     }
 end

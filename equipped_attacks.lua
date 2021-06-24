@@ -45,6 +45,7 @@ function Equipped_Attacks:mouseClicked(x, y, button)
     for index, attack in ipairs(moves_list) do
         if love.mouse.getX() >= attack.x - attack.text:getWidth() / 2 and love.mouse.getX() <= attack.x + attack.text:getWidth() / 2 and love.mouse.getY() >= attack.y and love.mouse.getY() <= attack.y + attack.text:getHeight() then
             current_attack_slot = attack["id"]
+            moves = Moves()
             game_state = "select_attacks"
         end
     end
