@@ -32,7 +32,7 @@ end
 function Dodge_Sequence:update(dt)
     self.selector = self.selector + self.speed * dt
     if self.selector >= self.x - (self.width / 2) + self.width then
-        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1.5)
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * (player.resilience / 100))) * 1.5)
         if player.health - player.stamina <= 0 then
             player.health = 0
             player.current_action = "dying"
@@ -58,28 +58,28 @@ end
 
 function Dodge_Sequence:damage()
     if self.selector >= self.x - (self.width / 2) + ((self.width - self.crit) / 2) and self.selector <= self.x - (self.width / 2) + ((self.width - self.crit) / 2) + self.crit then
-        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 0.5)
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * (player.resilience / 100))) * 0.5)
         if player.health - player.stamina <= 0 then
             player.health = 0
             player.current_action = "dying"
             player.animation_state = "dying"
         end
     elseif self.selector >= self.x - (self.width / 2) + ((self.width - self.normal_attack) / 2) and self.selector <= self.x - (self.width / 2) + ((self.width - self.normal_attack) / 2) + self.normal_attack then
-        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1)
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * (player.resilience / 100))) * 1)
         if player.health - player.stamina <= 0 then
             player.health = 0
             player.current_action = "dying"
             player.animation_state = "dying"
         end
     elseif self.selector >= self.x - (self.width / 2) + ((self.width - self.weak_attack) / 2) and self.selector <= self.x - (self.width / 2) + ((self.width - self.weak_attack) / 2) + self.weak_attack then
-        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1.2)
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * (player.resilience / 100))) * 1.2)
         if player.health - player.stamina <= 0 then
             player.health = 0
             player.current_action = "dying"
             player.animation_state = "dying"
         end
     else
-        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * player.defense)) * 1.5)
+        player.health = player.health - math.floor((self.damage_taken - (self.damage_taken * (player.resilience / 100))) * 1.5)
         if player.health - player.stamina <= 0 then
             player.health = 0
             player.current_action = "dying"

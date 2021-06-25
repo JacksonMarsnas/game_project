@@ -1,6 +1,6 @@
 Character = Object:extend()
 
-function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy, new_agility)
+function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_holy, new_agility, new_level, new_resilience)
     require "bullet"
     require "debuff"
 
@@ -29,10 +29,12 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.active_buffs = {}
     self.damage_multiplier = 1
 
-    self.max_health = new_health
-    self.health = self.max_health
+    self.base_vitality = new_vitality
+    self.vitality = self.base_vitality
+    self.health = self.vitality * 10
     self.attacks = {}
-    self.defense = 0.1
+    self.base_resilience = new_resilience
+    self.resilience = self.base_resilience
     self.strength = new_strength
     self.base_strength = self.strength
     self.skill = new_skill
@@ -44,6 +46,8 @@ function Character:new(new_health, new_strength, new_skill, new_arcane, new_holy
     self.agility = new_agility
     self.base_agility = self.agility
     self.stamina_recovery_speed = 25
+    self.level = new_level
+    self.experience = 500
 end
 
 function Character:draw()
@@ -115,9 +119,9 @@ end
 
 function Character:draw_navbar()
     love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 20, 930, self.health / self.max_health * 256, 24)
+    love.graphics.rectangle("fill", 20, 930, self.health / (self.vitality * 10) * 256, 24)
     love.graphics.setColor(0, 0.082, 0.56)
-    love.graphics.rectangle("fill", 20, 930, self.stamina / self.max_health * 256, 24)
+    love.graphics.rectangle("fill", 20, 930, self.stamina / (self.vitality * 10) * 256, 24)
     love.graphics.setColor(1, 1, 1)
     love.graphics.print(self.health - self.stamina .. " HP", 20, 930)
     love.graphics.print(self.attacks[self.current_weapon]["name"], 300, 910)
@@ -126,38 +130,6 @@ function Character:draw_navbar()
     for index, buff in ipairs(self.active_buffs) do
         love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, 960)
     end
-end
-
-function Character:setup_stats()
-    self.current_action = "none"
-    self.x = 128
-    self.y = 128
-    self.current_x_tile = self.x / 64 + 1
-    self.current_y_tile = self.y / 64 + 1
-    self.animations = self:create_animations()
-    self.current_frame = 1
-    self.speed_multiplier = 10
-    self.animation_state = "idle_down"
-    self.current_map = "map_1"
-    self.stop_drawing = false
-    self.current_weapon = 1
-    self.stamina = 0
-    self.bullet_is_present = false
-    self.regen_check = true
-    self.active_buffs = {}
-
-    self.max_health = new_health
-    self.health = self.max_health
-    self.attacks = {}
-    self.defense = 0.1
-    self.strength = new_strength
-    self.base_strength = self.strength
-    self.skill = new_skill
-    self.base_skill = self.skill
-    self.arcane = new_arcane
-    self.base_arcane = self.arcane
-    self.holy = new_holy
-    self.base_holy = self.holy
 end
 
 function Character:cycle_frames(dt, current_enemies)

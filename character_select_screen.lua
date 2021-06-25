@@ -27,12 +27,14 @@ function Character_Select_Screen:make_character_list()
         table.insert(character_list, 
         {name = love.graphics.newText(character_select_text, current_character["name"]),
         display_name = current_character["name"],
-        health = current_character["health"],
+        vitality = current_character["vitality"],
         strength = current_character["strength"],
         skill = current_character["skill"],
         arcane = current_character["arcane"],
         holy = current_character["holy"],
         agility = current_character["agility"],
+        resilience = current_character["resilience"],
+        level = current_character["level"],
         x = 20,
         y = 256 + index * 64,
         selected = false})
@@ -52,12 +54,13 @@ function Character_Select_Screen:draw_characters()
         love.graphics.draw(current_character.name, current_character.x, current_character.y)
         if current_character["selected"] == true then
             love.graphics.print("Name: " .. current_character.display_name, 500, 300)
-            love.graphics.print("Health: " .. current_character.health, 500, 350)
+            love.graphics.print("vitality: " .. current_character.vitality, 500, 350)
             love.graphics.print("Strength: " .. current_character.strength, 500, 400)
             love.graphics.print("Skill: " .. current_character.skill, 500, 450)
             love.graphics.print("Arcane: " .. current_character.arcane, 500, 500)
             love.graphics.print("Holy: " .. current_character.holy, 500, 550)
             love.graphics.print("Agility: " .. current_character.agility, 500, 600)
+            love.graphics.print("Resilience: " .. current_character.resilience, 500, 650)
         end
     end
 end
@@ -65,10 +68,10 @@ end
 function Character_Select_Screen:start_button()
     start_button = {
         text = love.graphics.newText(character_select_text, "START"),
-        x = 500,
-        y = 650
+        x = 480,
+        y = 800
     }
-    love.graphics.draw(start_button["text"], start_button["x"], start_button["y"])
+    love.graphics.draw(start_button["text"], start_button["x"] - start_button.text:getWidth() / 2, start_button["y"])
 end
 
 function Character_Select_Screen:mouseClicked(x, y, button)
@@ -77,10 +80,10 @@ function Character_Select_Screen:mouseClicked(x, y, button)
 end
 
 function Character_Select_Screen:click_start_button(x, y, button)
-    if love.mouse.getX() >= start_button["x"] and love.mouse.getX() <= start_button["x"] + start_button.text:getWidth() and love.mouse.getY() >= start_button["y"] and love.mouse.getY() <= start_button["y"] + start_button.text:getHeight() then
+    if love.mouse.getX() >= start_button["x"] - start_button.text:getWidth() / 2 and love.mouse.getX() <= start_button["x"] + start_button.text:getWidth() / 2 and love.mouse.getY() >= start_button["y"] and love.mouse.getY() <= start_button["y"] + start_button.text:getHeight() then
         for index, current_character in ipairs(character_list) do
             if current_character["selected"] == true then
-                player = Character(current_character.health, current_character.strength, current_character.skill, current_character.arcane, current_character.holy, current_character.agility)
+                player = Character(current_character.vitality, current_character.strength, current_character.skill, current_character.arcane, current_character.holy, current_character.agility, current_character.level, current_character.resilience)
                 player.attacks = {moves.all_moves[1], moves.all_moves[9], moves.all_moves[8]}
                 game_state = "play"
             end

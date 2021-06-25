@@ -27,26 +27,31 @@ function Moves:new()
             permanent_effects = {effects.permanent_effects[2]},
             description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
         }, {
-            name = "Skill Move",
-            type = "Attack",
-            base_damage = 10,
-            stamina = 30,
-            slots = 1,
+            name = "Ice Ray",
+            type = "Ranged",
+            base_damage = 5,
+            stamina = 20,
+            slots = 2,
+            range = 2,
             scaling = {
                 strength = 0,
-                skill = 0.5,
-                arcane = 0,
+                skill = 0.2,
+                arcane = 0.35,
                 holy = 0
             },
             multipliers = {
                 crit_multiplier = 1,
-                normal_multiplier = 1,
+                normal_multiplier = 1.2,
                 weak_multiplier = 1,
                 speed_multiplier = 1
             },
-            effect = {effects.all_effects[1]},
-            permanent_effects = {},
-            description = "An attack that scales well with the wielder's skill"
+            effect = {
+                effects.all_effects[1], effects.all_effects[1]
+            },
+            permanent_effects = {
+                effects.permanent_effects[3]
+            },
+            description = "A spell used by northern territories. Most lands do not experience freezing, so a weapon of ice can catch many off guard. While rather weak, it temporarily makes it easier to land attacks on the target and to dodge theirs as well.\nScaling: medium arcane, low skill"
         }, {
             name = "Arcane Move",
             type = "Attack",
@@ -225,15 +230,15 @@ function Moves:create_buffs()
             code = "RSS",
             duration = 3 + (0.1 * player.holy) + (0.1 * player.strength),
             buff = function()
-                player.base_defense = player.defense
+                player.base_resilience = player.resilience
                 player.agility = 80
-                player.defense = player.defense + ((0.075 * player.strength) * player.defense) + ((0.075 * player.holy) * player.defense)
+                player.resilience = player.resilience + ((0.075 * player.strength) * player.resilience) + ((0.075 * player.holy) * player.resilience)
                 player.base_stamina_recovery_speed = player.stamina_recovery_speed
                 player.stamina_recovery_speed = player.stamina_recovery_speed + (0.5 * player.strength) + (0.5 * player.holy)
             end,
             recurring_buff = function() end,
             revert = function()
-                player.defense = player.base_defense
+                player.resilience = player.base_resilience
                 player.stamina_recovery_speed = player.base_stamina_recovery_speed
             end
         }
