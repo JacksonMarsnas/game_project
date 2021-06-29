@@ -24,8 +24,18 @@ function Equipped_Attacks:draw()
     self:generate_attack_list()
 
     for index, attack in ipairs(moves_list) do
+        if attack["type"] == "Attack" then
+            love.graphics.setColor(0.99, 0.66, 0.012)
+        elseif attack["type"] == "Ranged" then
+            love.graphics.setColor(0.012, 0.76, 0.99)
+        elseif attack["type"] == "Buff" then
+            love.graphics.setColor(0.28, 0.75, 0.29)
+        elseif attack["type"] == "Debuff" then
+            love.graphics.setColor(0.73, 0, 0)
+        end
         love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
         love.graphics.setFont(attacks_description)
+        love.graphics.setColor(1, 1, 1)
         love.graphics.printf(attack.description, 0, attack.y + 48, 960, "center")
     end
 end
@@ -37,7 +47,8 @@ function Equipped_Attacks:generate_attack_list()
         description = attack["description"],
         x = 480,
         y = 128 + index * 164,
-        id = index})
+        id = index,
+        type = attack["type"]})
     end
 end
 

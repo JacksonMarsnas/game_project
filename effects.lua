@@ -47,7 +47,7 @@ function Effects:melee_only_effects()
                 end
             end,
             description = "Effect: HP+",
-            heavy_description = "Grant your weapon weak healing properties. While this blessing is small, it is still a gift in battle.\nScaling: low holy"
+            heavy_description = "Grant your weapon weak healing\nproperties. While this blessing is small, it is\nstill a gift in battle. Scaling: low holy"
         }, {
             name = "Inverted",
             effect_function = function(enemy) 
@@ -57,7 +57,7 @@ function Effects:melee_only_effects()
                 end
             end,
             description = "Effect: -DEF",
-            heavy_description = "An obscure finish used on the blade of a weapon of unknown origin. Inverts the defenses of the target for one turn."
+            heavy_description = "An obscure finish used on the blade of\na weapon of unknown origin. Inverts the defenses\nof the target for one turn."
         }
     }
 end

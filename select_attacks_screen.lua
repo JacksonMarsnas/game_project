@@ -27,9 +27,23 @@ function Select_Attacks_Screen:draw()
     self:make_filter_options()
 
     for index, attack in ipairs(moves_list) do
+        self:colours(attack)
         love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
         love.graphics.setFont(attacks_description)
+        love.graphics.setColor(1, 1, 1)
         love.graphics.printf(attack.all_info.description, 0, attack.y + 48, 960, "center")
+    end
+end
+
+function Select_Attacks_Screen:colours(attack)
+    if attack["all_info"]["type"] == "Attack" then
+        love.graphics.setColor(0.99, 0.66, 0.012)
+    elseif attack["all_info"]["type"] == "Ranged" then
+        love.graphics.setColor(0.012, 0.76, 0.99)
+    elseif attack["all_info"]["type"] == "Buff" then
+        love.graphics.setColor(0.28, 0.75, 0.29)
+    elseif attack["all_info"]["type"] == "Debuff" then
+        love.graphics.setColor(0.73, 0, 0)
     end
 end
 
@@ -100,7 +114,7 @@ function Select_Attacks_Screen:scroll(x, y)
     if game_state == "select_attacks" then
         if y > 0 and self.screen_top < 0 then
             self.screen_top = self.screen_top + 100
-        elseif y < 0 and self.screen_top > -128 - #moves_list * 150  then
+        elseif y < 0 and self.screen_top > -128 - ((#moves_list + 1) * 192) + 1000 then
             self.screen_top = self.screen_top - 100
         end
     end
@@ -111,7 +125,7 @@ function Select_Attacks_Screen:filter_all()
     for index, attack in ipairs(moves.all_moves) do
         table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
         x = 480,
-        y = 128 + index * 164,
+        y = 128 + index * 192,
         id = index,
         all_info = attack})
     end

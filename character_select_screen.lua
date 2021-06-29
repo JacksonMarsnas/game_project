@@ -84,7 +84,7 @@ function Character_Select_Screen:click_start_button(x, y, button)
         for index, current_character in ipairs(character_list) do
             if current_character["selected"] == true then
                 player = Character(current_character.vitality, current_character.strength, current_character.skill, current_character.arcane, current_character.holy, current_character.agility, current_character.level, current_character.resilience)
-                player.attacks = {moves.all_moves[1], moves.all_moves[9], moves.all_moves[8]}
+                player.attacks = {moves.all_moves[1], moves.all_moves[2], moves.all_moves[3]}
                 game_state = "play"
             end
         end

@@ -10,7 +10,7 @@ function Moves:new()
             type = "Attack",
             base_damage = 20,
             stamina = 50,
-            slots = 2,
+            slots = 1,
             scaling = {
                 strength = 1.5,
                 skill = 0,
@@ -53,76 +53,6 @@ function Moves:new()
             },
             description = "A spell used by northern territories. Most lands do not experience freezing, so a weapon of ice can catch many off guard. While rather weak, it temporarily makes it easier to land attacks on the target and to dodge theirs as well.\nScaling: medium arcane, low skill"
         }, {
-            name = "Arcane Move",
-            type = "Attack",
-            base_damage = 20,
-            stamina = 30,
-            slots = 2,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0.5,
-                holy = 0
-            },
-            multipliers = {
-                crit_multiplier = 1,
-                normal_multiplier = 1,
-                weak_multiplier = 1,
-                speed_multiplier = 1
-            },
-            effect = {
-                effects.all_effects[1],
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "An attack that scales well with the wielder's arcane"
-        }, {
-            name = "Holy Move",
-            type = "Attack",
-            base_damage = 20,
-            stamina = 30,
-            slots = 1,
-            scaling = {
-                strength = 0,
-                skill = 0,
-                arcane = 0,
-                holy = 0.5
-            },
-            multipliers = {
-                crit_multiplier = 1,
-                normal_multiplier = 1,
-                weak_multiplier = 1,
-                speed_multiplier = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "An attack that scales well with the wielder's holyness"
-        }, {
-            name = "Hybrid Move",
-            type = "Attack",
-            base_damage = 15,
-            stamina = 30,
-            slots = 1,
-            scaling = {
-                strength = 0.3,
-                skill = 0.3,
-                arcane = 0,
-                holy = 0
-            },
-            multipliers = {
-                crit_multiplier = 1,
-                normal_multiplier = 1,
-                weak_multiplier = 1,
-                speed_multiplier = 1
-            },
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "An attack that scales somewhat with the wielder's strength and skill"
-        }, {
             name = "Fast Reflexes",
             type = "Buff",
             base_buff = self.buffs["fast_reflexes"],
@@ -138,9 +68,9 @@ function Moves:new()
             type = "Buff",
             base_buff = self.buffs["rock_steady_stance"],
             stamina = 50,
-            slots = 2,
+            slots = 1,
             effect = {
-                effects.all_effects[1], effects.all_effects[1]
+                effects.all_effects[1]
             },
             permanent_effects = {},
             description = "Assume a stance to gain stone-like poise and posture. Such a stance drastically improves the defense and stamina recovery of the user, but can only be held for a very short time.\nScaling: low holy, strength"
@@ -170,18 +100,6 @@ function Moves:new()
                 effects.permanent_effects[1]
             },
             description = "Discover the latent arcane power within oneself, directing it outward. This technique is extremely powerful, but has harmful effects for the user.\nScaling: High Arcane. Low holy, skill"
-        }, {
-            name = "Debuff",
-            type = "Debuff",
-            base_buff = self.debuffs["debuff"],
-            range = 2,
-            stamina = 20,
-            slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "A passive technique that heals the user moderately based on their holyness"
         }, {
             name = "Burn",
             type = "Debuff",

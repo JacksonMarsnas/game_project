@@ -24,12 +24,29 @@ end
 function Augmentation_Screen:setup_table(augment_text)
     augment_list = {}
     for index, augment in ipairs(effects.all_effects) do
-        table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
-        x = 480,
-        y = 192 + index * 64,
-        id = index,
-        all_info = augment
-    })
+
+        local count = 0
+        for word in string.gmatch(augment["heavy_description"], "\n") do
+            count = count + 1
+        end
+
+        if index == 1 then
+            table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
+            x = 480,
+            y = 192 + index * 64,
+            id = index,
+            all_info = augment,
+            height = 32 * (count + 1)
+        })
+        else
+            table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
+            x = 480,
+            y = augment_list[index - 1]["y"] + augment_list[index - 1]["height"] + 32,
+            id = index,
+            all_info = augment,
+            height = 32 * (count + 1)
+        }) 
+        end
     end
 end
 
