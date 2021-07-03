@@ -57,6 +57,7 @@ function love.load()
         map2 = Map2()
     }
 
+    all_maps["map1"]:setup_enemies()
     current_map = all_maps[map1]
     game_state = "character_select"
 end

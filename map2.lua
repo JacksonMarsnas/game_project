@@ -39,3 +39,10 @@ function Map2:draw()
         enemy:draw()
     end
 end
+
+function Map2:setup_enemies()
+    self.enemies = {
+        Enemy1(640, 640),
+        Enemy1(64, 0)
+    }
+end

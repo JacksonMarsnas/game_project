@@ -29,6 +29,7 @@ function Map:transport()
     end
     
     for index, portal in ipairs(self.portals) do
+        all_maps[portal.next_map]:setup_enemies()
         player.current_map = portal.next_map
         player.x = portal.next_x
         player.y = portal.next_y

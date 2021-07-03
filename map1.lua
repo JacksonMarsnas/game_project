@@ -19,11 +19,6 @@ function Map1:new()
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2}
     }
 
-    self.enemies = {
-        Enemy1(640, 640),
-        Enemy1(128, 192)
-    }
-
     self.portals = {
         Next_Level(1, 1, 1, 1, "map2")
     }
@@ -47,4 +42,11 @@ function Map1:draw()
     for index, portal in ipairs(self.portals) do
         portal:draw()
     end
+end
+
+function Map1:setup_enemies()
+    self.enemies = {
+        Enemy1(640, 640),
+        Enemy1(128, 192)
+    }
 end
