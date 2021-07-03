@@ -59,6 +59,7 @@ function Attack_Sequence:damage()
             self.enemy.animation_state = "dead"
             self.enemy.health = 0
             occupation_map[self.enemy.current_y][self.enemy.current_x] = false
+            player.experience = player.experience + self.enemy["exp_drop"]
         end
     elseif self.selector >= self.x - (self.width / 2) + ((self.width - self.normal_attack) / 2) and self.selector <= self.x - (self.width / 2) + ((self.width - self.normal_attack) / 2) + self.normal_attack then
         local damage = player:calculate_damage(self.enemy)
@@ -68,6 +69,7 @@ function Attack_Sequence:damage()
             self.enemy.animation_state = "dead"
             self.enemy.health = 0
             occupation_map[self.enemy.current_y][self.enemy.current_x] = false
+            player.experience = player.experience + self.enemy["exp_drop"]
         end
     elseif self.selector >= self.x - (self.width / 2) + ((self.width - self.weak_attack) / 2) and self.selector <= self.x - (self.width / 2) + ((self.width - self.weak_attack) / 2) + self.weak_attack then
         local damage = player:calculate_damage(self.enemy)
@@ -76,6 +78,7 @@ function Attack_Sequence:damage()
             self.enemy.animation_state = "dead"
             self.enemy.health = 0
             occupation_map[self.enemy.current_y][self.enemy.current_x] = false
+            player.experience = player.experience + self.enemy["exp_drop"]
         end
     end
     game_state = "play"

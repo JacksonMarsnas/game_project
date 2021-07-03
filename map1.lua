@@ -2,6 +2,7 @@ Map1 = Map:extend()
 
 function Map1:new()
     Map1.super.new(self)
+    self.difficulty = 1
     self.tilemap = {
         {1, 2, 5, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
