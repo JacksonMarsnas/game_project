@@ -105,7 +105,11 @@ function Select_Attacks_Screen:attack_clicked(x, y, button)
                 effects:debuff_only_effects()
             end
             
-            game_state = "augmentation_screen"
+            if attack["all_info"]["slots"] > 0 then
+                game_state = "augmentation_screen"
+            else
+                game_state = "play"
+            end
         end
     end
 end

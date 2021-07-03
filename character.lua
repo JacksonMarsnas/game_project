@@ -20,7 +20,7 @@ function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_ho
     self.current_frame = 1
     self.speed_multiplier = 10
     self.animation_state = "idle_down"
-    self.current_map = "map_1"
+    self.current_map = "map1"
     self.stop_drawing = false
     self.current_weapon = 1
     self.stamina = 0
@@ -45,7 +45,8 @@ function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_ho
     self.base_holy = self.holy 
     self.agility = new_agility
     self.base_agility = self.agility
-    self.stamina_recovery_speed = 25
+    self.base_stamina_recovery_speed = 25
+    self.stamina_recovery_speed = self.base_stamina_recovery_speed
     self.level = new_level
     self.experience = 500
 end
@@ -339,7 +340,7 @@ end
 
 function Character:stamina_regen()
     local allow_player_action = true
-    for index, enemy in ipairs(map1.enemies) do
+    for index, enemy in ipairs(all_maps[self.current_map]["enemies"]) do
         if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" and enemy.animation_state ~= "dead" then
             allow_player_action = false
         end
@@ -460,7 +461,7 @@ function Character:create_animations()
 end
 
 function Character:check_occupation(x_offset, y_offset)
-    if tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 then
+    if all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 5 then
         return false
     elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
         return false

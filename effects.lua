@@ -51,13 +51,28 @@ function Effects:melee_only_effects()
         }, {
             name = "Inverted",
             effect_function = function(enemy) 
-                if self:insert_debuff(3, function(enemy) enemy.defense = enemy.base_defense end, "Inverted", enemy, function() end) == false then
+                if self:insert_debuff(2, function(enemy) enemy.defense = enemy.base_defense end, "Inverted", enemy, function() end) == false then
                     enemy.base_defense = enemy.defense
                     enemy.defense = -1 * enemy.defense
                 end
             end,
             description = "Effect: -DEF",
             heavy_description = "An obscure finish used on the blade of\na weapon of unknown origin. Inverts the defenses\nof the target for one turn."
+        }, {
+            name = "Paralyzing",
+            effect_function = function(enemy) 
+                if self:insert_debuff(3, function(enemy) 
+                    enemy.agility = enemy.base_agility
+                    enemy.blocking = enemy.base_blocking
+                end, "Paralyzed", enemy, function() end) == false then
+                    enemy.base_agility = enemy.agility
+                    enemy.base_blocking = enemy.blocking
+                    enemy.blocking = enemy.blocking / 2
+                    enemy.agility = enemy.agility / 2
+                end
+            end,
+            description = "Effect: -DEF",
+            heavy_description = "Adds a slight electric power to your\nweapon, discharging on impact. Causes the\nattacking and blocking of foes to be lowered for\ntwo turns. Particularly effective against foes who\nare difficult to dodge or attack."
         }
     }
 end
@@ -231,6 +246,13 @@ function Effects:permanent_effects()
                 end
             end,
             description = "Effect: AGL-, BLK-",
+        }, {
+            name = "Struggle",
+            effect_function = function(enemy) 
+                enemy.health = enemy.health - ((player.health - player.stamina) / 2)
+                player.stamina = player.health - 1
+            end,
+            description = "Effect: STM+",
         }
     }
 end

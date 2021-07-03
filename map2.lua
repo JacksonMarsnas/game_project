@@ -1,9 +1,9 @@
-Map1 = Map:extend()
+Map2 = Map:extend()
 
-function Map1:new()
-    Map1.super.new(self)
+function Map2:new()
+    Map2.super.new(self)
     self.tilemap = {
-        {1, 2, 5, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
+        {1, 2, 1, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
         {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
@@ -20,20 +20,15 @@ function Map1:new()
     }
 
     self.enemies = {
-        Enemy1(640, 640),
-        Enemy1(128, 192)
-    }
-
-    self.portals = {
-        Next_Level(1, 1, 1, 1, "map2")
+        Enemy1(640, 640)
     }
 end
 
-function Map1:update()
+function Map2:update()
 
 end
 
-function Map1:draw()
+function Map2:draw()
     for row_number, row_info in ipairs(self.tilemap) do
         for tile_number, tile_info in ipairs(row_info) do
             love.graphics.draw(grass, grass_frames[tile_info], tile_number * 64 - 64, row_number * 64 - 64)
@@ -42,9 +37,5 @@ function Map1:draw()
 
     for index, enemy in ipairs(self.enemies) do
         enemy:draw()
-    end
-
-    for index, portal in ipairs(self.portals) do
-        portal:draw()
     end
 end

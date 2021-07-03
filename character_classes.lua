@@ -19,7 +19,7 @@ function Character_classes:new()
             skill = 30,
             arcane = 0,
             holy = 0,
-            agility = 99,
+            agility = 15,
             resilience = 15,
             level = 1
         }, {

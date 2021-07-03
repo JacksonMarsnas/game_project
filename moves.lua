@@ -27,6 +27,27 @@ function Moves:new()
             permanent_effects = {effects.permanent_effects[2]},
             description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
         }, {
+            name = "Stab",
+            type = "Attack",
+            base_damage = 10,
+            stamina = 20,
+            slots = 2,
+            scaling = {
+                strength = 0.2,
+                skill = 0.5,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1.5,
+                normal_multiplier = 1,
+                weak_multiplier = 0.5,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {},
+            description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill, low strength"
+        },{
             name = "Ice Ray",
             type = "Ranged",
             base_damage = 5,
@@ -52,28 +73,6 @@ function Moves:new()
                 effects.permanent_effects[3]
             },
             description = "A spell used by northern territories. Most lands do not experience freezing, so a weapon of ice can catch many off guard. While rather weak, it temporarily makes it easier to land attacks on the target and to dodge theirs as well.\nScaling: medium arcane, low skill"
-        }, {
-            name = "Fast Reflexes",
-            type = "Buff",
-            base_buff = self.buffs["fast_reflexes"],
-            stamina = 40,
-            slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "A simple spell that quickens the reflexes. Makes attacking and dodging easier for a short time.\nScaling: low strength, skill, arcane, holy"
-        }, {
-            name = "Rock Steady Stance",
-            type = "Buff",
-            base_buff = self.buffs["rock_steady_stance"],
-            stamina = 50,
-            slots = 1,
-            effect = {
-                effects.all_effects[1]
-            },
-            permanent_effects = {},
-            description = "Assume a stance to gain stone-like poise and posture. Such a stance drastically improves the defense and stamina recovery of the user, but can only be held for a very short time.\nScaling: low holy, strength"
         }, {
             name = "Inner Arcanum",
             type = "Ranged",
@@ -101,6 +100,63 @@ function Moves:new()
             },
             description = "Discover the latent arcane power within oneself, directing it outward. This technique is extremely powerful, but has harmful effects for the user.\nScaling: High Arcane. Low holy, skill"
         }, {
+            name = "Struggle",
+            type = "Ranged",
+            base_damage = 0,
+            stamina = 0,
+            slots = 0,
+            range = 2,
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 0.5,
+                normal_multiplier = 0.75,
+                weak_multiplier = 0.75,
+                speed_multiplier = 1
+            },
+            effect = {},
+            permanent_effects = {
+                effects.permanent_effects[4]
+            },
+            description = "An extremely powerful yet dangerous spell. The damage of this spell is equal to half of the player's remaining health. However, this spell is exhausting to use, using enough stamina to leave the caster on the brink of death.\nScaling: none"
+        }, {
+            name = "Fast Reflexes",
+            type = "Buff",
+            base_buff = self.buffs["fast_reflexes"],
+            stamina = 40,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            description = "A simple spell that quickens the reflexes. Makes attacking and dodging easier for a short time.\nScaling: low strength, skill, arcane, holy"
+        }, {
+            name = "Rock Steady Stance",
+            type = "Buff",
+            base_buff = self.buffs["rock_steady_stance"],
+            stamina = 50,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            description = "Assume a stance to gain stone-like poise and posture. Such a stance drastically improves the defense and stamina recovery of the user, but can only be held for a very short time.\nScaling: low holy, strength"
+        }, {
+            name = "Bolster",
+            type = "Buff",
+            base_buff = self.buffs["bolster"],
+            stamina = 40,
+            slots = 2,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            description = "A simple spell that bolsters defenses. While not very exciting, it has low cost and a long duration, making it quite a favourable spell.\nScaling: Low holy"
+        },{
             name = "Burn",
             type = "Debuff",
             base_buff = self.debuffs["burn"],
@@ -123,7 +179,6 @@ function Moves:create_buffs()
             duration = 3,
             slots = 1,
             buff = function()
-                player.base_strength = player.strength
                 player.strength = player.strength * 2
             end,
             recurring_buff = function() end,
@@ -134,9 +189,7 @@ function Moves:create_buffs()
             code = "FRL",
             duration = (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy),
             buff = function()
-                player.base_agility = player.agility
                 player.agility = player.agility + (0.2 * player.strength) + (0.2 * player.skill) + (0.2 * player.arcane) + (0.2 * player.holy)
-                player.base_stamina_recovery_speed = player.stamina_recovery_speed
                 player.stamina_recovery_speed = player.stamina_recovery_speed + (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy)
             end,
             recurring_buff = function() end,
@@ -148,16 +201,23 @@ function Moves:create_buffs()
             code = "RSS",
             duration = 3 + (0.1 * player.holy) + (0.1 * player.strength),
             buff = function()
-                player.base_resilience = player.resilience
-                player.agility = 80
                 player.resilience = player.resilience + ((0.075 * player.strength) * player.resilience) + ((0.075 * player.holy) * player.resilience)
-                player.base_stamina_recovery_speed = player.stamina_recovery_speed
                 player.stamina_recovery_speed = player.stamina_recovery_speed + (0.5 * player.strength) + (0.5 * player.holy)
             end,
             recurring_buff = function() end,
             revert = function()
                 player.resilience = player.base_resilience
                 player.stamina_recovery_speed = player.base_stamina_recovery_speed
+            end
+        }, bolster = {
+            code = "DEF",
+            duration = 3 + (0.2 * player.holy),
+            buff = function()
+                player.resilience = player.resilience + (0.5 * player.holy)
+            end,
+            recurring_buff = function() end,
+            revert = function()
+                player.resilience = player.base_resilience
             end
         }
     }
