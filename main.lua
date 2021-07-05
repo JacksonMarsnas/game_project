@@ -6,6 +6,7 @@ function love.load()
     require "character"
     require "enemy"
     require "enemy1"
+    require "enemy2"
     require "death"
     require "moves"
     require "character_classes"

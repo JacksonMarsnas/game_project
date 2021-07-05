@@ -4,7 +4,7 @@ function Map1:new()
     Map1.super.new(self)
     self.difficulty = 1
     self.tilemap = {
-        {1, 2, 5, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
+        {5, 2, 1, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
         {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1},
         {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
@@ -21,7 +21,7 @@ function Map1:new()
     }
 
     self.portals = {
-        Next_Level(1, 1, 1, 1, "map2")
+        Next_Level(1, 1, 8, 14, "map2")
     }
 end
 
@@ -48,6 +48,6 @@ end
 function Map1:setup_enemies()
     self.enemies = {
         Enemy1(640, 640),
-        Enemy1(128, 192)
+        Enemy2(128, 192)
     }
 end

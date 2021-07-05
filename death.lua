@@ -2,6 +2,7 @@ Death = Map:extend()
 
 function Death:new()
     Death.super.new(self)
+    self.enemies = {}
 end
 
 function Death:update()
