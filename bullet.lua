@@ -55,7 +55,7 @@ function Bullet:collision(current_enemies)
 end
 
 function Bullet:tile_collision(x_tile, y_tile, current_enemies)
-    if all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 1 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 2 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 4 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 5 then
+    if all_maps[player.current_map].tilemap[y_tile][x_tile] == 3 then
         player.bullet_is_present = false
         self:start_enemy_turn(current_enemies)
     end

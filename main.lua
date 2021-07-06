@@ -66,6 +66,7 @@ end
 function love.update(dt)
     if player.current_map ~= "death_screen" then
         if game_state == "play" then
+            verify_player_movement()
             player:update(dt, all_maps[player.current_map]["enemies"])
             for index, enemy in ipairs(all_maps[player.current_map]["enemies"]) do
                 enemy:update(dt)
@@ -110,6 +111,34 @@ function love.draw()
     end
 end
 
+function verify_player_movement()
+    if game_state ~= "character_select" then
+        if player.health > 0 and player.current_action == "none" then
+            local allow_player_action = true
+            for index, enemy in ipairs(all_maps[player.current_map]["enemies"]) do
+                if enemy.animation_state ~= "idle_up" and enemy.animation_state ~= "idle_down" and enemy.animation_state ~= "idle_left" and enemy.animation_state ~= "idle_right" and enemy.animation_state ~= "dead" then
+                    allow_player_action = false
+                end
+            end
+
+            if allow_player_action == true and player.bullet_is_present == false and player.regen_check == true then
+                if love.keyboard.isDown("w", "a", "s", "d") then
+                    player.regen_check = false
+                end
+                if love.keyboard.isDown("w") then
+                    player:move("w")
+                elseif love.keyboard.isDown("a") then
+                    player:move("a")
+                elseif love.keyboard.isDown("s") then
+                    player:move("s")
+                elseif love.keyboard.isDown("d") then
+                    player:move("d")
+                end
+            end
+        end
+    end
+end
+
 function love.keypressed(key)
     if key == "space" and game_state == "attacking" then
         attack_action:damage()
@@ -127,12 +156,10 @@ function love.keypressed(key)
             end
 
             if allow_player_action == true and player.bullet_is_present == false and player.regen_check == true then
-                if (key == "w" or key == "a" or key == "s" or key == "d" or key == "up" or key == "down" or key == "left" or key == "right") and game_state == "play" then
+                if (key == "up" or key == "down" or key == "left" or key == "right") and game_state == "play" then
                     player.regen_check = false
                 end
-                if (key == "w" or key == "a" or key == "s" or key == "d") and game_state == "play" then
-                    player:move(key)
-                elseif (key == "up" or key == "down" or key == "left" or key == "right") and game_state == "play" then
+                if (key == "up" or key == "down" or key == "left" or key == "right") and game_state == "play" then
                     if key == "up" then
                         player:attack(key, 0, -1, all_maps[player.current_map]["enemies"])
                     elseif key == "down" then

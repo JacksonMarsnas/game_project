@@ -12,8 +12,8 @@ function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_ho
     effect_font:setFilter( "nearest", "nearest" )
 
     self.current_action = "none"
-    self.x = 128
-    self.y = 128
+    self.x = 448
+    self.y = 448
     self.current_x_tile = self.x / 64 + 1
     self.current_y_tile = self.y / 64 + 1
     self.animations = self:create_animations()
@@ -286,7 +286,7 @@ end
 
 function Character:movement_animation(dt, current_enemies)
     if self.current_action == "walking_up" and self.y >= (self.next_y_tile - 1) * 64 then
-        self.y = self.y - 100 * dt
+        self.y = self.y - 140 * dt
         if self.y <= (self.next_y_tile - 1) * 64 then
             self.y = (self.next_y_tile - 1) * 64
             self.current_y_tile = self.y / 64 + 1
@@ -297,7 +297,7 @@ function Character:movement_animation(dt, current_enemies)
             self:begin_enemy_turn(current_enemies)
         end
     elseif self.current_action == "walking_down" and self.y <= (self.next_y_tile - 1) * 64 then
-        self.y = self.y + 100 * dt
+        self.y = self.y + 140 * dt
         if self.y >= (self.next_y_tile - 1) * 64 then
             self.y = (self.next_y_tile - 1) * 64
             self.current_y_tile = self.y / 64 + 1
@@ -308,7 +308,7 @@ function Character:movement_animation(dt, current_enemies)
             self:begin_enemy_turn(current_enemies)
         end
     elseif self.current_action == "walking_left" and self.x >= (self.next_x_tile - 1) * 64 then
-        self.x = self.x - 100 * dt
+        self.x = self.x - 140 * dt
         if self.x <= (self.next_x_tile - 1) * 64 then
             self.x = (self.next_x_tile - 1) * 64
             self.current_x_tile = self.x / 64 + 1
@@ -319,7 +319,7 @@ function Character:movement_animation(dt, current_enemies)
             self:begin_enemy_turn(current_enemies)
         end
     elseif self.current_action == "walking_right" and self.x <= (self.next_x_tile - 1) * 64 then
-        self.x = self.x + 100 * dt
+        self.x = self.x + 140 * dt
         if self.x >= (self.next_x_tile - 1) * 64 then
             self.x = (self.next_x_tile - 1) * 64
             self.current_x_tile = self.x / 64 + 1
@@ -461,7 +461,7 @@ function Character:create_animations()
 end
 
 function Character:check_occupation(x_offset, y_offset)
-    if all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 1 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 2 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 4 and all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] ~= 5 then
+    if all_maps[self.current_map].tilemap[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == 3 then
         return false
     elseif occupation_map[self.current_y_tile + y_offset][self.current_x_tile + x_offset] == true then
         return false

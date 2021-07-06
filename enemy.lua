@@ -49,7 +49,7 @@ end
 
 function Enemy:move(dt)
     if self.animation_state == "walking_up" then
-        self.y = self.y - 100 * dt
+        self.y = self.y - 140 * dt
         if self.y <= (self.current_y - 1) * 64 then
             self.y = (self.current_y - 1) * 64
             self.current_y = self.y / 64 + 1
@@ -57,7 +57,7 @@ function Enemy:move(dt)
             self.animation_state = "idle_up"
         end
     elseif self.animation_state == "walking_down" then
-        self.y = self.y + 100 * dt
+        self.y = self.y + 140 * dt
         if self.y >= (self.current_y - 1) * 64 then
             self.y = (self.current_y - 1) * 64
             self.current_y = self.y / 64 + 1
@@ -65,7 +65,7 @@ function Enemy:move(dt)
             self.animation_state = "idle_down"
         end
     elseif self.animation_state == "walking_left" then
-        self.x = self.x - 100 * dt
+        self.x = self.x - 140 * dt
         if self.x <= (self.current_x - 1) * 64 then
             self.x = (self.current_x - 1) * 64
             self.current_x = self.x / 64 + 1
@@ -73,7 +73,7 @@ function Enemy:move(dt)
             self.animation_state = "idle_left"
         end
     elseif self.animation_state == "walking_right" then
-        self.x = self.x + 100 * dt
+        self.x = self.x + 140 * dt
         if self.x >= (self.current_x - 1) * 64 then
             self.x = (self.current_x - 1) * 64
             self.current_x = self.x / 64 + 1
@@ -178,7 +178,7 @@ function Enemy:attack(x_difference, y_difference)
 end    
 
 function Enemy:check_occupation(x_offset, y_offset)
-    if self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and all_maps[player.current_map].tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 1 and all_maps[player.current_map].tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 2 and all_maps[player.current_map].tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 4 and all_maps[player.current_map].tilemap[self.current_y + y_offset][self.current_x + x_offset] ~= 5 then
+    if self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and all_maps[player.current_map].tilemap[self.current_y + y_offset][self.current_x + x_offset] == 3 then
         return false
     elseif self.current_y + y_offset >= 1 and self.current_y + y_offset <= 14 and self.current_x + x_offset >= 1 and self.current_x + x_offset <= 14 and occupation_map[self.current_y + y_offset][self.current_x + x_offset] == true then
         return false

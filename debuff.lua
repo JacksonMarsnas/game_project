@@ -49,7 +49,7 @@ function Debuff:collision(current_enemies)
     local x_tile = math.floor(self.x / 64 + 0.5) + 1
     local y_tile = math.floor(self.y / 64 + 0.5) + 1
 
-    if all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 1 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 2 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 4 and all_maps[player.current_map].tilemap[y_tile][x_tile] ~= 5 then
+    if all_maps[player.current_map].tilemap[y_tile][x_tile] == 3 then
         self:begin_enemy_turn(current_enemies)
     end
 
