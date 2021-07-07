@@ -125,7 +125,6 @@ function verify_player_movement()
             end
 
             if allow_player_action == true and player.bullet_is_present == false and player.regen_check == true then
-
                 if love.keyboard.isDown("w") then
                     player:move("w")
                 elseif love.keyboard.isDown("a") then

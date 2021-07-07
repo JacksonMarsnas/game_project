@@ -86,7 +86,7 @@ end
 function Enemy:begin_turn(player_x_tile, player_y_tile)
     self:decrement_buffs()
 
-    if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile) == true then
+    if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile, self.current_x, self.current_y, 0) == true then
         local x_difference = self.current_x - player_x_tile
         local y_difference = self.current_y - player_y_tile
 
@@ -207,9 +207,27 @@ function Enemy:create_animations()
     }
 end
 
-function Enemy:check_aggro_range(player_x_tile, player_y_tile)
-    if math.abs(self.current_x - player_x_tile) + math.abs(self.current_y - player_y_tile) <= 5 then
+function Enemy:check_aggro_range(player_x_tile, player_y_tile, next_x, next_y, current_iteration)
+    --if math.abs(self.current_x - player_x_tile) + math.abs(self.current_y - player_y_tile) <= 5 then
+        --return true
+    --end
+    --return false
+
+    if next_x < 1 or next_x > 15 or next_y < 1 or next_y > 14 then
+        return false
+    elseif all_maps[player.current_map].tilemap[next_y][next_x] == 3 or all_maps[player.current_map].tilemap[next_y][next_x] == 8 or current_iteration == 6 then
+        return false
+    elseif next_y == player.current_y_tile and next_x == player.current_x_tile then
         return true
+    else
+        if self:check_aggro_range(player_x_tile, player_y_tile, next_x + 1, next_y, current_iteration + 1) == true then
+            return true
+        elseif self:check_aggro_range(player_x_tile, player_y_tile, next_x - 1, next_y, current_iteration + 1) then
+            return true
+        elseif self:check_aggro_range(player_x_tile, player_y_tile, next_x, next_y + 1, current_iteration + 1) then
+            return true
+        elseif self:check_aggro_range(player_x_tile, player_y_tile, next_x, next_y - 1, current_iteration + 1) then
+            return true
+        end
     end
-    return false
 end
