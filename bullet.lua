@@ -73,7 +73,6 @@ function Bullet:enemy_collision(x_tile, y_tile, current_enemies)
                 occupation_map[enemy.current_y][enemy.current_x] = false
                 player.experience = player.experience + enemy["exp_drop"]
             end
-            self:start_enemy_turn(current_enemies)
         end
     end
 end

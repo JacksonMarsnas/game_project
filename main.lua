@@ -3,6 +3,8 @@ function love.load()
     require "map"
     require "map1"
     require "map2"
+    require "map3"
+    require "map4"
     require "character"
     require "enemy"
     require "enemy1"
@@ -55,7 +57,8 @@ function love.load()
     all_maps = {
         death_screen = death,
         map1 = Map1(),
-        map2 = Map2()
+        map2 = Map2(),
+        map3 = Map3()
     }
 
     all_maps["map1"]:setup_enemies()

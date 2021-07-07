@@ -89,7 +89,6 @@ function Enemy:begin_turn(player_x_tile, player_y_tile)
     if self.health > 0 and self:check_aggro_range(player_x_tile, player_y_tile) == true then
         local x_difference = self.current_x - player_x_tile
         local y_difference = self.current_y - player_y_tile
-        occupation_map[self.current_y][self.current_x] = false
 
         if (math.abs(x_difference) == 1 and math.abs(y_difference) == 0) or (math.abs(y_difference) == 1 and math.abs(x_difference) == 0) then
             self:attack(x_difference, y_difference)
@@ -114,6 +113,7 @@ function Enemy:decrement_buffs()
 end
 
 function Enemy:move_horizontal(x_difference, y_difference)
+    occupation_map[self.current_y][self.current_x] = false
     if x_difference < 0 then
         if self:check_occupation(1, 0) == true then
             self.animation_state = "walking_right"
@@ -140,6 +140,7 @@ function Enemy:move_horizontal(x_difference, y_difference)
 end
 
 function Enemy:move_vertical(x_difference, y_difference)
+    occupation_map[self.current_y][self.current_x] = false
     if y_difference < 0 then
         if self:check_occupation(0, 1) == true then
             self.animation_state = "walking_down"

@@ -141,7 +141,7 @@ function Character:cycle_frames(dt, current_enemies)
         self:change_to_idle_animations()
         self.current_frame = 1
         self.current_action = "none"
-        self:attack_buff_begin_enemy_turn(current_enemies)
+        self:buff_begin_enemy_turn(current_enemies)
     end
 end
 
@@ -160,12 +160,8 @@ function Character:change_to_idle_animations()
     end
 end
 
-function Character:attack_buff_begin_enemy_turn(current_enemies)
-    if self.attacks[self.current_weapon]["type"] == "Attack" then
-        for index, enemy in ipairs(current_enemies) do
-            enemy:begin_turn(self.current_x_tile, self.current_y_tile)
-        end
-    elseif self.attacks[self.current_weapon]["type"] == "Buff" then
+function Character:buff_begin_enemy_turn(current_enemies)
+    if self.attacks[self.current_weapon]["type"] == "Buff" then
         for index, enemy in ipairs(current_enemies) do
             enemy:begin_turn(self.current_x_tile, self.current_y_tile)
         end
@@ -382,12 +378,8 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 
     if self.attacks[self.current_weapon]["type"] == "Attack" then
         self:melee_attack(x_offset, y_offset, current_enemies)
-    elseif self.attacks[self.current_weapon]["type"] == "Ranged" then
-        
     elseif self.attacks[self.current_weapon]["type"] == "Buff" then
         self:buff_used()
-    elseif self.attacks[self.current_weapon]["type"] == "Debuff" then
-        
     end
 end
 

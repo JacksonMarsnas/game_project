@@ -211,12 +211,11 @@ function Effects:permanent_effects()
             effect_function = function()
                 if self:insert_buff(5, 
                 function() 
-                    player.defense = player.base_defense
+                    player.resilience = player.base_resilience
                     player.damage_multiplier = 1
                 end, "Inner Arcanum", "DMG-") == false then
                     player.damage_multiplier = 0.5
-                    player.base_defense = player.defense
-                    player.defense = player.defense - 0.5
+                    player.resilience = player.resilience - 0.5
                 end
             end,
             description = "DEF-"

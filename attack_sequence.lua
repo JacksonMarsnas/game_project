@@ -81,5 +81,6 @@ function Attack_Sequence:damage()
             player.experience = player.experience + self.enemy["exp_drop"]
         end
     end
+    player:begin_enemy_turn(all_maps[player.current_map]["enemies"])
     game_state = "play"
 end
