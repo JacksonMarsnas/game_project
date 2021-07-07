@@ -170,18 +170,22 @@ end
 
 function Character:move(key)
     if key == "w" and self.current_y_tile > 1 and self:check_occupation(0, -1) == true then
+        self.regen_check = false
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile - 1
         self.current_action = "walking_up"
     elseif key == "s" and self.current_y_tile < 14 and self:check_occupation(0, 1) == true then
+        self.regen_check = false
         self:change_movement_animation(key)
         self.next_y_tile = self.current_y_tile + 1
         self.current_action = "walking_down"
     elseif key == "a" and self.current_x_tile > 1 and self:check_occupation(-1, 0) == true then
+        self.regen_check = false
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile - 1
         self.current_action = "walking_left"
     elseif key == "d" and self.current_x_tile < 15 and self:check_occupation(1, 0) == true then
+        self.regen_check = false
         self:change_movement_animation(key)
         self.next_x_tile = self.current_x_tile + 1
         self.current_action = "walking_right"
