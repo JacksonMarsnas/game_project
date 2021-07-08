@@ -22,7 +22,7 @@ function Map4:new()
 
     self.portals = {
         Next_Level(8, 2, 12, 13, "map3"),
-        Next_Level(10, 6, 3, 12, "map1")
+        Next_Level(10, 6, 3, 12, "map2")
     }
 end
 

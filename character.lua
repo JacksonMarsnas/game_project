@@ -53,10 +53,19 @@ end
 
 function Character:draw()
     if self.stop_drawing ~= true then
+        for index, row in ipairs(all_maps[player.current_map].vision_map) do
+            for row_number, spot in ipairs(row) do
+                if spot == 0 then
+                    love.graphics.setColor(0, 0, 0)
+                    love.graphics.rectangle("fill", row_number * 64 - 64, index * 64 - 64, 64, 64 )
+                end
+            end
+        end
+        love.graphics.setColor(1, 1, 1)
+
         if (self.animation_state == "casting_up" or self.animation_state == "casting_down" or self.animation_state == "casting_left" or self.animation_state == "casting_right") and self.attacks[self.current_weapon]["type"] == "Buff" then
             love.graphics.draw(projectiles_sheet, projectile_frames[3], self.x, self.y)
         end
-
         love.graphics.setFont(nav_font)
         love.graphics.draw(character_sheet, character_frames[self.animations[self.animation_state][math.floor(self.current_frame)]], self.x, self.y)
         self:draw_navbar()
@@ -351,6 +360,7 @@ function Character:stamina_regen()
         if self.stamina < 0 then
             self.stamina = 0
         end
+        self:line_of_sight(self.current_x_tile, self.current_y_tile, 0)
         self:decrement_buffs()
     end
 end
@@ -492,5 +502,20 @@ function Character:swap_weapons()
     self.current_weapon = self.current_weapon + 1
     if self.current_weapon > 3 then
         self.current_weapon = 1
+    end
+end
+
+function Character:line_of_sight(next_x, next_y, generation)
+    if next_x < 1 or next_x > 15 or next_y < 1 or next_y > 14 then
+        return false
+    elseif all_maps[self.current_map].tilemap[next_y][next_x] == 3 or all_maps[self.current_map].tilemap[next_y][next_x] == 8 or generation == 6 then
+        all_maps[player.current_map].vision_map[next_y][next_x] = 1
+        return false
+    else
+        all_maps[player.current_map].vision_map[next_y][next_x] = 1
+        self:line_of_sight(next_x, next_y + 1, generation + 1)
+        self:line_of_sight(next_x, next_y - 1, generation + 1)
+        self:line_of_sight(next_x + 1, next_y, generation + 1)
+        self:line_of_sight(next_x - 1, next_y, generation + 1) 
     end
 end
