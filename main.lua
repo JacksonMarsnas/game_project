@@ -58,8 +58,11 @@ function love.load()
         death_screen = death,
         map1 = Map1(),
         map2 = Map2(),
-        map3 = Map3()
+        map3 = Map3(),
+        map4 = Map4()
     }
+
+    dodge_sequences = {}
 
     all_maps["map1"]:setup_enemies()
     current_map = all_maps[map1]
@@ -77,7 +80,7 @@ function love.update(dt)
         elseif game_state == "attacking" then
             attack_action:update(dt)
         elseif game_state == "dodging" then
-            dodge_action:update(dt)
+            dodge_sequences[1]:update(dt)
         end
     end
 end
@@ -98,7 +101,7 @@ function love.draw()
         love.graphics.setFont(myFont)
         all_maps[player.current_map]:draw()
         player:draw()
-        dodge_action:draw()
+        dodge_sequences[1]:draw()
     elseif game_state == "pause" then
         pause_screen:draw()
     elseif game_state == "equipped_attacks" then
@@ -143,7 +146,7 @@ function love.keypressed(key)
     if key == "space" and game_state == "attacking" then
         attack_action:damage()
     elseif key == "space" and game_state == "dodging" then
-        dodge_action:damage()
+        dodge_sequences[1]:damage()
     end
 
     if game_state ~= "character_select" then

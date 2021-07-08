@@ -388,11 +388,16 @@ function Character:attack(key, x_offset, y_offset, current_enemies)
 end
 
 function Character:melee_attack(x_offset, y_offset, current_enemies)
+    local enemy_struck = false
     for index, enemy in ipairs(current_enemies) do
         if enemy.current_x - self.current_x_tile - x_offset == 0 and enemy.current_y - self.current_y_tile - y_offset == 0 and self:check_occupation(x_offset, y_offset) == false then
+            enemy_struck = true
             attack_action = Attack_Sequence(enemy, self.attacks[self.current_weapon]["multipliers"])
             game_state = "attacking"
         end
+    end
+    if enemy_struck == false then
+        self:begin_enemy_turn(current_enemies)
     end
 end
 
@@ -478,6 +483,7 @@ function Character:animation_loop()
 end
 
 function Character:take_damage(damage_taken, enemy_agility)
+    table.insert(dodge_sequences, Dodge_Sequence(damage_taken, enemy_agility))
     dodge_action = Dodge_Sequence(damage_taken, enemy_agility)
     game_state = "dodging"
 end

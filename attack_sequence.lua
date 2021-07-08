@@ -32,6 +32,7 @@ end
 function Attack_Sequence:update(dt)
     self.selector = self.selector + self.speed * dt
     if self.selector >= self.x - (self.width / 2) + self.width then
+        player:begin_enemy_turn(all_maps[player.current_map]["enemies"])
         game_state = "play"
     end
 end

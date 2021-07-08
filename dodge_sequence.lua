@@ -86,5 +86,8 @@ function Dodge_Sequence:damage()
             player.animation_state = "dying"
         end
     end
-    game_state = "play"
+    table.remove(dodge_sequences, 1)
+    if #dodge_sequences == 0 then
+        game_state = "play"
+    end
 end
