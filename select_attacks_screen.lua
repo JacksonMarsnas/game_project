@@ -106,8 +106,10 @@ function Select_Attacks_Screen:attack_clicked(x, y, button)
             end
             
             if attack["all_info"]["slots"] > 0 then
+                self.filter_state = "All"
                 game_state = "augmentation_screen"
             else
+                self.filter_state = "All"
                 game_state = "play"
             end
         end
@@ -127,11 +129,13 @@ end
 function Select_Attacks_Screen:filter_all()
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-        x = 480,
-        y = 128 + index * 192,
-        id = index,
-        all_info = attack})
+        if attack["locked"] == false then
+            table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
+            x = 480,
+            y = 128 + (#moves_list + 1) * 192,
+            id = index,
+            all_info = attack})
+        end
     end
     return moves_list
 end
@@ -139,7 +143,7 @@ end
 function Select_Attacks_Screen:filter_melee()
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        if attack.type == "Attack" then
+        if attack.type == "Attack" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
             x = 480,
             y = 128 + (#moves_list + 1) * 164,
@@ -153,7 +157,7 @@ end
 function Select_Attacks_Screen:filter_ranged()
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        if attack.type == "Ranged" then
+        if attack.type == "Ranged" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
             x = 480,
             y = 128 + (#moves_list + 1) * 164,
@@ -167,7 +171,7 @@ end
 function Select_Attacks_Screen:filter_buffs()
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        if attack.type == "Buff" then
+        if attack.type == "Buff" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
             x = 480,
             y = 128 + (#moves_list + 1) * 164,
@@ -181,7 +185,7 @@ end
 function Select_Attacks_Screen:filter_debuffs()
     moves_list = {}
     for index, attack in ipairs(moves.all_moves) do
-        if attack.type == "Debuff" then
+        if attack.type == "Debuff" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
             x = 480,
             y = 128 + (#moves_list + 1) * 164,

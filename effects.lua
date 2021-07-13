@@ -222,7 +222,6 @@ function Effects:permanent_effects()
         }, {
             name = "Plow Through",
             effect_function = function()
-                math.randomseed(os.time())
                 if math.random(1, 3) == 1 then
                     player.health = player.health - player.vitality
                     if player.health - player.stamina <= 0 then

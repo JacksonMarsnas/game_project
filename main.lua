@@ -13,6 +13,7 @@ function love.load()
     require "enemy2"
     require "death"
     require "moves"
+    require "chest"
     require "character_classes"
     require "character_select_screen"
     require "pause_screen"
@@ -26,6 +27,7 @@ function love.load()
     require "level_up"
     require "next_level"
 
+    math.randomseed(os.time())
     current_attack_slot = 1
     window_width = 960
     window_height = 1000
@@ -183,6 +185,8 @@ function love.keypressed(key)
                         game_state = "character_modification"
                     elseif all_maps[player.current_map].tilemap[player.current_y_tile][player.current_x_tile] == 5 then
                         all_maps[player.current_map]:transport()
+                    elseif all_maps[player.current_map].tilemap[player.current_y_tile][player.current_x_tile] == 9 then
+                        all_maps[player.current_map]:loot_chest()
                     end
                 elseif key == "escape" then
                     if game_state == "play" then

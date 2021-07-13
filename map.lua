@@ -4,7 +4,7 @@ function Map:new()
     grass = love.graphics.newImage("grass.png")
     grass_frames = {}
     local tile_dimensions = 64
-    for i = 0, 7 do
+    for i = 0, 8 do
         table.insert(grass_frames, love.graphics.newQuad(i * tile_dimensions, 0, tile_dimensions, tile_dimensions, grass:getWidth(), grass:getHeight()))
     end
     self.tilemap = {}
@@ -53,6 +53,14 @@ function Map:transport()
             player.current_y_tile = player.y / 64 + 1
             all_maps[portal.next_map]:setup_enemies()
             player:line_of_sight(player.current_x_tile, player.current_y_tile, 0)
+        end
+    end
+end
+
+function Map:loot_chest()
+    for index, chest in ipairs(self.chests) do
+        if player.x == chest.x and player.y == chest.y then
+            chest:loot()
         end
     end
 end

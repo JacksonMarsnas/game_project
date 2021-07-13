@@ -25,6 +25,7 @@ function Moves:new()
             },
             effect = {effects.all_effects[1]},
             permanent_effects = {effects.permanent_effects[2]},
+            locked = false,
             description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
         }, {
             name = "Stab",
@@ -46,6 +47,7 @@ function Moves:new()
             },
             effect = {effects.all_effects[1], effects.all_effects[1]},
             permanent_effects = {},
+            locked = true,
             description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill, low strength"
         },{
             name = "Ice Ray",
@@ -72,6 +74,7 @@ function Moves:new()
             permanent_effects = {
                 effects.permanent_effects[3]
             },
+            locked = true,
             description = "A spell used by northern territories. Most lands do not experience freezing, so a weapon of ice can catch many off guard. While rather weak, it temporarily makes it easier to land attacks on the target and to dodge theirs as well.\nScaling: medium arcane, low skill"
         }, {
             name = "Inner Arcanum",
@@ -98,6 +101,7 @@ function Moves:new()
             permanent_effects = {
                 effects.permanent_effects[1]
             },
+            locked = true,
             description = "Discover the latent arcane power within oneself, directing it outward. This technique is extremely powerful, but has harmful effects for the user.\nScaling: High Arcane. Low holy, skill"
         }, {
             name = "Struggle",
@@ -122,6 +126,7 @@ function Moves:new()
             permanent_effects = {
                 effects.permanent_effects[4]
             },
+            locked = true,
             description = "An extremely powerful yet dangerous spell. The damage of this spell is equal to half of the player's remaining health. However, this spell is exhausting to use, using enough stamina to leave the caster on the brink of death.\nScaling: none"
         }, {
             name = "Fast Reflexes",
@@ -133,6 +138,7 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
+            locked = true,
             description = "A simple spell that quickens the reflexes. Makes attacking and dodging easier for a short time.\nScaling: low strength, skill, arcane, holy"
         }, {
             name = "Rock Steady Stance",
@@ -144,6 +150,7 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
+            locked = true,
             description = "Assume a stance to gain stone-like poise and posture. Such a stance drastically improves the defense and stamina recovery of the user, but can only be held for a very short time.\nScaling: low holy, strength"
         }, {
             name = "Bolster",
@@ -155,6 +162,7 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
+            locked = true,
             description = "A simple spell that bolsters defenses. While not very exciting, it has low cost and a long duration, making it quite a favourable spell.\nScaling: Low holy"
         },{
             name = "Burn",
@@ -167,6 +175,7 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
+            locked = true,
             description = "A spell that does no immediate harm to the target, instead leaving them with a harsh burn to the skin. The target will suffer slight damage over time, as well as a decrease in damage.\nScaling: Low holy, arcane"
         }
     }
