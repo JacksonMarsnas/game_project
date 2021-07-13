@@ -2,7 +2,7 @@ Map2 = Map:extend()
 
 function Map2:new()
     Map2.super.new(self)
-    self.difficulty = 1.1
+    self.difficulty = 1
     self.tilemap = {
         {8, 3, 5, 3, 8, 3, 3, 3, 3, 3, 3, 3, 8, 8, 8},
         {8, 3, 6, 3, 3, 3, 6, 7, 6, 7, 6, 3, 8, 8, 8},
@@ -21,8 +21,8 @@ function Map2:new()
     }
 
     self.portals = {
-        Next_Level(3, 1, 8, 1, "map1"),
         Next_Level(8, 14, 8, 1, "map1"),
+        Next_Level(3, 1, 8, 14, "map5"),
         Next_Level(11, 3, 2, 2, "map3")
     }
 end

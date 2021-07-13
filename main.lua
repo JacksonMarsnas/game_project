@@ -5,6 +5,8 @@ function love.load()
     require "map2"
     require "map3"
     require "map4"
+    require "map5"
+    require "map6"
     require "character"
     require "enemy"
     require "enemy1"
@@ -59,7 +61,9 @@ function love.load()
         map1 = Map1(),
         map2 = Map2(),
         map3 = Map3(),
-        map4 = Map4()
+        map4 = Map4(),
+        map5 = Map5(),
+        map6 = Map6()
     }
 
     dodge_sequences = {}
