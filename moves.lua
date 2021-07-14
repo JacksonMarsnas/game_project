@@ -47,7 +47,7 @@ function Moves:new()
             },
             effect = {effects.all_effects[1], effects.all_effects[1]},
             permanent_effects = {},
-            locked = true,
+            locked = false,
             description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill, low strength"
         },{
             name = "Ice Ray",
@@ -74,7 +74,7 @@ function Moves:new()
             permanent_effects = {
                 effects.permanent_effects[3]
             },
-            locked = true,
+            locked = false,
             description = "A spell used by northern territories. Most lands do not experience freezing, so a weapon of ice can catch many off guard. While rather weak, it temporarily makes it easier to land attacks on the target and to dodge theirs as well.\nScaling: medium arcane, low skill"
         }, {
             name = "Inner Arcanum",
@@ -164,7 +164,7 @@ function Moves:new()
             permanent_effects = {},
             locked = true,
             description = "A simple spell that bolsters defenses. While not very exciting, it has low cost and a long duration, making it quite a favourable spell.\nScaling: Low holy"
-        },{
+        }, {
             name = "Burn",
             type = "Debuff",
             base_buff = self.debuffs["burn"],
@@ -177,6 +177,19 @@ function Moves:new()
             permanent_effects = {},
             locked = true,
             description = "A spell that does no immediate harm to the target, instead leaving them with a harsh burn to the skin. The target will suffer slight damage over time, as well as a decrease in damage.\nScaling: Low holy, arcane"
+        }, {
+            name = "Stun Seed",
+            type = "Debuff",
+            base_buff = self.debuffs["stun_seed"],
+            range = 2,
+            stamina = 25,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            locked = false,
+            description = "Throw a handful of harmful plant seeds in the face of the opponent. Stun seeds leave the target shocked, greatly hindering their ability to attack and block. Such techniques are disrespectful, yet fun to use.\nScaling: Medium holy, arcane"
         }
     }
 end
@@ -185,7 +198,9 @@ function Moves:create_buffs()
     self.buffs = {
         bufface = {
             code = "STR",
-            duration = 3,
+            duration = function()
+                return 3
+            end,
             slots = 1,
             buff = function()
                 player.strength = player.strength * 2
@@ -196,7 +211,9 @@ function Moves:create_buffs()
             end
         }, fast_reflexes = {
             code = "FRL",
-            duration = (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy),
+            duration = function()
+                return (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy)
+            end,
             buff = function()
                 player.agility = player.agility + (0.2 * player.strength) + (0.2 * player.skill) + (0.2 * player.arcane) + (0.2 * player.holy)
                 player.stamina_recovery_speed = player.stamina_recovery_speed + (0.1 * player.strength) + (0.1 * player.skill) + (0.1 * player.arcane) + (0.1 * player.holy)
@@ -208,7 +225,9 @@ function Moves:create_buffs()
             end
         }, rock_steady_stance = {
             code = "RSS",
-            duration = 3 + (0.1 * player.holy) + (0.1 * player.strength),
+            duration = function()
+                return 3 + (0.1 * player.holy) + (0.1 * player.strength)
+            end,
             buff = function()
                 player.resilience = player.resilience + ((0.075 * player.strength) * player.resilience) + ((0.075 * player.holy) * player.resilience)
                 player.stamina_recovery_speed = player.stamina_recovery_speed + (0.5 * player.strength) + (0.5 * player.holy)
@@ -220,7 +239,9 @@ function Moves:create_buffs()
             end
         }, bolster = {
             code = "DEF",
-            duration = 3 + (0.2 * player.holy),
+            duration = function()
+                return 3 + (0.2 * player.holy)
+            end,
             buff = function()
                 player.resilience = player.resilience + (0.5 * player.holy)
             end,
@@ -236,7 +257,9 @@ function Moves:create_debuffs()
     self.debuffs = {
         debuff = {
             name = "Debuff",
-            duration = 5,
+            duration = function()
+                return 5
+            end,
             buff = function(enemy)
                 enemy.base_defense = enemy.defense
                 enemy.defense = enemy.defense - (0.005 * player.arcane + 0.005 * player.holy)
@@ -247,7 +270,9 @@ function Moves:create_debuffs()
             end
         }, burn = {
             name = "Burn",
-            duration = 2 + math.floor(0.15 * player.holy + 0.15 * player.arcane),
+            duration = function()
+                return 2 + math.floor(0.15 * player.holy + 0.15 * player.arcane)
+            end,
             buff = function(enemy)
                 enemy.base_attack_power = enemy.attack_power
                 enemy.attack_power = enemy.attack_power - math.floor(0.1 + player.arcane + player.holy)
@@ -258,6 +283,22 @@ function Moves:create_debuffs()
             revert = function(enemy)
                 enemy.attack_power = enemy.base_attack_power
             end
-        },
+        }, stun_seed = {
+            name = "Stun Seed",
+            duration = function()
+                return 3 + math.floor(0.1 * player.holy + 0.1 * player.arcane)
+            end,
+            buff = function(enemy)
+                enemy.base_blocking = enemy.blocking
+                enemy.blocking = enemy.blocking - (0.2 * player.arcane + 0.05 * player.holy)
+                enemy.base_agility = enemy.agility
+                enemy.agility = enemy.agility - (0.2 * player.holy + 0.05 * player.arcane)
+            end,
+            recurring_buff = function(enemy) end,
+            revert = function(enemy)
+                enemy.blocking = enemy.base_blocking
+                enemy.agility = enemy.base_agility
+            end
+        }
     }
 end

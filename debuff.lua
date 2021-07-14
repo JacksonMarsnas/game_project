@@ -68,7 +68,7 @@ function Debuff:apply_debuff(enemy, x_tile, y_tile)
     if buff_used == false then
         player.attacks[player.current_weapon]["base_buff"]["buff"](enemy)
         table.insert(enemy.active_buffs, {
-            duration = player.attacks[player.current_weapon]["base_buff"]["duration"],
+            duration = player.attacks[player.current_weapon]["base_buff"]["duration"](),
             revert = player.attacks[player.current_weapon]["base_buff"]["revert"],
             recurring_buff = player.attacks[player.current_weapon]["base_buff"]["recurring_buff"]
         })

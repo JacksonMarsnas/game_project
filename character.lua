@@ -28,6 +28,7 @@ function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_ho
     self.regen_check = true
     self.active_buffs = {}
     self.damage_multiplier = 1
+    self.has_looted = false
 
     self.base_vitality = new_vitality
     self.vitality = self.base_vitality
@@ -73,6 +74,10 @@ function Character:draw()
         if self.bullet_is_present == true then
             bullet:draw()
         end
+
+        if self.has_looted == true then
+            love.graphics.print(self.loot_text, 64, 64)
+        end
     end
 end
 
@@ -87,6 +92,12 @@ function Character:update(dt, current_enemies)
             self:movement_animation(dt, current_enemies)
         end
     end
+    if self.has_looted == true then
+        self.loot_text_timeout = self.loot_text_timeout + dt
+        if self.loot_text_timeout >= 5 then
+            self.has_looted = false
+        end
+    end
 end
 
 function Character:draw_effects()
@@ -95,16 +106,16 @@ function Character:draw_effects()
         if index <= 2 then
             love.graphics.print(effect["description"], 540, 910 + index * 48 - 48)
         else
-            love.graphics.print(effect["description"], 740, 910 + index * 48 - 144)
+            love.graphics.print(effect["description"], 775, 910 + index * 48 - 144)
         end
     end
 
     local permanent_effects_length = #self.attacks[self.current_weapon]["permanent_effects"]
     for index, effect in ipairs(self.attacks[self.current_weapon]["effect"]) do
-        if index <= 2 then
+        if index + permanent_effects_length <= 2 then
             love.graphics.print(effect["description"], 540, 910 + (index + permanent_effects_length) * 48 - 48)
         else
-            love.graphics.print(effect["description"], 740, 910 + (index + permanent_effects_length) * 48 - 144)
+            love.graphics.print(effect["description"], 775, 910 + (index + permanent_effects_length) * 48 - 144)
         end
     end
 end
@@ -421,7 +432,7 @@ function Character:buff_used()
     if buff_used == false then
         self.attacks[self.current_weapon]["base_buff"]["buff"]()
         table.insert(self.active_buffs, {
-            duration = self.attacks[self.current_weapon]["base_buff"]["duration"],
+            duration = self.attacks[self.current_weapon]["base_buff"]["duration"](),
             revert = self.attacks[self.current_weapon]["base_buff"]["revert"],
             name = self.attacks[self.current_weapon]["base_buff"]["name"],
             code = self.attacks[self.current_weapon]["base_buff"]["code"]
