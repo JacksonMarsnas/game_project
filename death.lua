@@ -30,6 +30,6 @@ function Death:draw()
     font:setFilter( "nearest", "nearest" )
     love.graphics.setFont(font)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.printf("YOU DIED", 0, window_height / 2 - font:getHeight() / 2, 960, "center")
+    love.graphics.printf("YOU DIED", 0, window_height / 2 - font:getHeight() / 2, window_width, "center")
     love.graphics.setColor(1, 1, 1)
 end

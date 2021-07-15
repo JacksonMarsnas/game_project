@@ -13,9 +13,9 @@ end
 
 function Character_Select_Screen:draw()
     love.graphics.setFont(character_select_header)
-    love.graphics.printf("SELECT YOUR CHARACTER", 0, 128, 960, "center")
+    love.graphics.printf("SELECT YOUR CHARACTER", 0, 128, window_width, "center")
     love.graphics.setFont(character_select_text)
-    love.graphics.printf("Click on a character to view more info about them.", 0, 216, 960, "center")
+    love.graphics.printf("Click on a character to view more info about them.", 0, 216, window_width, "center")
 
     self:draw_characters()
     self:start_button()
@@ -67,8 +67,8 @@ end
 
 function Character_Select_Screen:start_button()
     start_button = {
-        text = love.graphics.newText(character_select_text, "START"),
-        x = 480,
+        text = love.graphics.newText(character_select_header, "START"),
+        x = window_width / 2,
         y = 800
     }
     love.graphics.draw(start_button["text"], start_button["x"] - start_button.text:getWidth() / 2, start_button["y"])

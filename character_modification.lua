@@ -12,13 +12,13 @@ function Character_Modification:new()
 
     self.attacks_option = {
         text = love.graphics.newText(mod_text, "Change Attacks and Effects"),
-        x = 480,
+        x = window_width / 2,
         y = 192
     }
 
     self.level_option = {
         text = love.graphics.newText(mod_text, "Level Up"),
-        x = 480,
+        x = window_width / 2,
         y = 256
     }
 end
@@ -29,7 +29,7 @@ end
 
 function Character_Modification:draw()
     love.graphics.setFont(mod_header)
-    love.graphics.printf("Choose an option", 0, 64, 960, "center")
+    love.graphics.printf("Choose an option", 0, 64, window_width, "center")
     love.graphics.draw(self.attacks_option.text, self.attacks_option.x - self.attacks_option.text:getWidth() / 2, self.attacks_option.y)
     love.graphics.draw(self.level_option.text, self.level_option.x - self.level_option.text:getWidth() / 2, self.level_option.y)
 end

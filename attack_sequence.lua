@@ -6,11 +6,11 @@ function Attack_Sequence:new(enemy, multipliers)
     self.width = 300
     self.height = 64
     self.crit = (15 + math.floor(player.agility * 0.75) - math.floor(enemy.blocking * 0.75)) * multipliers.crit_multiplier
-    self.normal_attack = (15 + math.floor(player.agility * 1.5) - math.floor(enemy.blocking * 1.5)) * multipliers.normal_multiplier + self.crit
-    self.weak_attack = (15 + (player.agility * 2.25) - (enemy.blocking * 2.25)) * multipliers.weak_multiplier + self.normal_attack
+    self.normal_attack = (15 + math.floor(player.agility * 1) - math.floor(enemy.blocking * 1)) * multipliers.normal_multiplier + self.crit
+    self.weak_attack = (15 + (player.agility * 1.5) - (enemy.blocking * 1.5)) * multipliers.weak_multiplier + self.normal_attack
     self.selector = self.x - (self.width / 2)
     self.enemy = enemy
-    self.speed = (300 - player.agility * 4 + enemy.blocking * 4) * multipliers.speed_multiplier
+    self.speed = (300 - player.agility * 2 + enemy.blocking * 2) * multipliers.speed_multiplier
 
     if self.crit < 5 then
         self.crit = 5

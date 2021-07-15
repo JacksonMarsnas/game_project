@@ -29,9 +29,16 @@ function love.load()
 
     math.randomseed(os.time())
     current_attack_slot = 1
-    window_width = 960
+    window_width = 1152
     window_height = 1000
     love.window.setMode(window_width, window_height)
+
+    mega_map = {
+        {1, 0},
+        {1, 0},
+        {1, 1},
+        {1, 1}
+    }
 
     myFont = love.graphics.newFont( "ARCADECLASSIC.TTF", 32)
     myFont:setFilter( "nearest", "nearest" )

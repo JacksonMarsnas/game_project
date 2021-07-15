@@ -80,7 +80,7 @@ function Level_Up:new()
     }
 
     self.start_button = {
-        x = 480,
+        x = window_width / 2,
         y = 900,
         text = love.graphics.newText(level_text, "START")
     }
@@ -92,9 +92,9 @@ end
 
 function Level_Up:draw()
     love.graphics.setFont(level_header)
-    love.graphics.printf("Select which stats to level up", 0, 64, 960, "center")
+    love.graphics.printf("Select which stats to level up", 0, 64, window_width, "center")
     love.graphics.setFont(level_description)
-    love.graphics.printf("Click on the plus button to level up a stat. Levels cannot be undone once clicked, so be careful what you choose. Click START once finished.", 0, 192, 960, "center")
+    love.graphics.printf("Click on the plus button to level up a stat. Levels cannot be undone once clicked, so be careful what you choose. Click START once finished.", 0, 192, window_width, "center")
     love.graphics.setFont(level_text)
     for index, stat in ipairs(self.base_stats) do
         stat["button"]["y"] = index * 64 + 256

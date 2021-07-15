@@ -21,9 +21,13 @@ function Map2:new()
     }
 
     self.portals = {
-        Next_Level(8, 14, 8, 1, "map1"),
-        Next_Level(3, 1, 8, 14, "map5"),
-        Next_Level(11, 3, 2, 2, "map3")
+        Next_Level(8, 14, 8, 1, "map1", 1, 4),
+        Next_Level(3, 1, 8, 14, "map5", 1, 2),
+        Next_Level(11, 3, 2, 2, "map3", 2, 3)
+    }
+
+    self.chests = {
+        Chest(5, 7)
     }
 end
 

@@ -29,6 +29,8 @@ function Character:new(new_vitality, new_strength, new_skill, new_arcane, new_ho
     self.active_buffs = {}
     self.damage_multiplier = 1
     self.has_looted = false
+    self.mega_map_x = 1
+    self.mega_map_y = 4
 
     self.base_vitality = new_vitality
     self.vitality = self.base_vitality
@@ -78,6 +80,8 @@ function Character:draw()
         if self.has_looted == true then
             love.graphics.print(self.loot_text, 64, 64)
         end
+
+        self:draw_map()
     end
 end
 
@@ -96,6 +100,30 @@ function Character:update(dt, current_enemies)
         self.loot_text_timeout = self.loot_text_timeout + dt
         if self.loot_text_timeout >= 5 then
             self.has_looted = false
+        end
+    end
+end
+
+function Character:draw_map()
+    love.graphics.print("MAP", 976, 64)
+    for row_number, row in ipairs(mega_map) do
+        for column_number, room in ipairs(row) do
+            if row_number == self.mega_map_y and column_number == self.mega_map_x then
+                love.graphics.setColor(1, 0, 0)
+                love.graphics.rectangle("fill", 976 + ((column_number - 1) * 16), 96 + ((row_number - 1) * 16), 16, 16)
+                love.graphics.setColor(0.5, 0.5, 0.5)
+                love.graphics.rectangle("line", 976 + ((column_number - 1) * 16), 96 + ((row_number - 1) * 16), 16, 16)
+                love.graphics.setColor(1, 1, 1)
+            elseif room == 0 then
+                love.graphics.setColor(1, 1, 1)
+                love.graphics.rectangle("line", 976 + ((column_number - 1) * 16), 96 + ((row_number - 1) * 16), 16, 16)
+            elseif room == 1 then
+                love.graphics.setColor(1, 1, 1)
+                love.graphics.rectangle("fill", 976 + ((column_number - 1) * 16), 96 + ((row_number - 1) * 16), 16, 16)
+                love.graphics.setColor(0.5, 0.5, 0.5)
+                love.graphics.rectangle("line", 976 + ((column_number - 1) * 16), 96 + ((row_number - 1) * 16), 16, 16)
+                love.graphics.setColor(1, 1, 1)
+            end
         end
     end
 end
@@ -149,7 +177,7 @@ function Character:draw_navbar()
     love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
     love.graphics.setFont(effect_font)
     for index, buff in ipairs(self.active_buffs) do
-        love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, 960)
+        love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, window_width)
     end
 end
 

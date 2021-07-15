@@ -251,6 +251,22 @@ function Effects:permanent_effects()
                 player.stamina = player.health - 1
             end,
             description = "Effect: STM+",
+        }, {
+            name = "Full Moon Sword",
+            effect_function = function(enemy) 
+                if math.random(5) == 5 then
+                    self:insert_debuff(8, function(enemy) end, "Great Blade of Moonlight", enemy, function() 
+                        enemy.health = enemy.health - math.floor(enemy.max_health / 20)
+                        if enemy.health <= 0 then
+                            enemy.animation_state = "dead"
+                            enemy.health = 0
+                            occupation_map[enemy.current_y][enemy.current_x] = false
+                            player.experience = player.experience + enemy["exp_drop"]
+                        end
+                    end)
+                end
+            end,
+            description = "Effect: %HP-",
         }
     }
 end

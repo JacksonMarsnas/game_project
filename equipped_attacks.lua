@@ -17,9 +17,9 @@ end
 
 function Equipped_Attacks:draw()
     love.graphics.setFont(attacks_header)
-    love.graphics.printf("EQUIPPED ATTACKS", 0, 128, 960, "center")
+    love.graphics.printf("EQUIPPED ATTACKS", 0, 128, window_width, "center")
     love.graphics.setFont(attacks_text)
-    love.graphics.printf("Click on one of them to change it.", 0, 216, 960, "center")
+    love.graphics.printf("Click on one of them to change it.", 0, 216, window_width, "center")
 
     self:generate_attack_list()
 
@@ -36,7 +36,7 @@ function Equipped_Attacks:draw()
         love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
         love.graphics.setFont(attacks_description)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.printf(attack.description, 0, attack.y + 48, 960, "center")
+        love.graphics.printf(attack.description, 0, attack.y + 48, window_width, "center")
     end
 end
 
@@ -45,7 +45,7 @@ function Equipped_Attacks:generate_attack_list()
     for index, attack in ipairs(player.attacks) do
         table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
         description = attack["description"],
-        x = 480,
+        x = window_width / 2,
         y = 128 + index * 164,
         id = index,
         type = attack["type"]})

@@ -20,7 +20,7 @@ end
 function Select_Attacks_Screen:draw()
     love.graphics.translate(0, self.screen_top)
     love.graphics.setFont(attacks_header)
-    love.graphics.printf("SELECT YOUR MOVES", 0, 128, 960, "center")
+    love.graphics.printf("SELECT YOUR MOVES", 0, 128, window_width, "center")
     love.graphics.setFont(attacks_text)
 
     self:filter()
@@ -31,7 +31,7 @@ function Select_Attacks_Screen:draw()
         love.graphics.draw(attack.text, attack.x - attack.text:getWidth() / 2, attack.y)
         love.graphics.setFont(attacks_description)
         love.graphics.setColor(1, 1, 1)
-        love.graphics.printf(attack.all_info.description, 0, attack.y + 48, 960, "center")
+        love.graphics.printf(attack.all_info.description, 0, attack.y + 48, window_width, "center")
     end
 end
 
@@ -66,7 +66,7 @@ function Select_Attacks_Screen:make_filter_options()
     filter_labels = {"All", "Melee", "Ranged", "Buffs", "Debuffs"}
     for index, option in ipairs(filter_labels) do
         table.insert(filter_options, {text = love.graphics.newText(attacks_text, option),
-        x = index * 160,
+        x = index * (window_width / 6),
         y = 192,
         label = option})
     end
@@ -131,7 +131,7 @@ function Select_Attacks_Screen:filter_all()
     for index, attack in ipairs(moves.all_moves) do
         if attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-            x = 480,
+            x = window_width / 2,
             y = 128 + (#moves_list + 1) * 192,
             id = index,
             all_info = attack})
@@ -145,7 +145,7 @@ function Select_Attacks_Screen:filter_melee()
     for index, attack in ipairs(moves.all_moves) do
         if attack.type == "Attack" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-            x = 480,
+            x = window_width / 2,
             y = 128 + (#moves_list + 1) * 164,
             id = index,
             all_info = attack})
@@ -159,7 +159,7 @@ function Select_Attacks_Screen:filter_ranged()
     for index, attack in ipairs(moves.all_moves) do
         if attack.type == "Ranged" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-            x = 480,
+            x = window_width / 2,
             y = 128 + (#moves_list + 1) * 164,
             id = index,
             all_info = attack})
@@ -173,7 +173,7 @@ function Select_Attacks_Screen:filter_buffs()
     for index, attack in ipairs(moves.all_moves) do
         if attack.type == "Buff" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-            x = 480,
+            x = window_width / 2,
             y = 128 + (#moves_list + 1) * 164,
             id = index,
             all_info = attack})
@@ -187,7 +187,7 @@ function Select_Attacks_Screen:filter_debuffs()
     for index, attack in ipairs(moves.all_moves) do
         if attack.type == "Debuff" and attack["locked"] == false then
             table.insert(moves_list, {text = love.graphics.newText(attacks_text, attack["name"] .. " - Type: " .. attack["type"] .. " - Effects: " .. attack["slots"]),
-            x = 480,
+            x = window_width / 2,
             y = 128 + (#moves_list + 1) * 164,
             id = index,
             all_info = attack})

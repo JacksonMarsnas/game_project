@@ -108,13 +108,35 @@ function Moves:new()
             multipliers = {
                 crit_multiplier = 0.5,
                 normal_multiplier = 1,
-                weak_multiplier = 1.5,
+                weak_multiplier = 1.25,
                 speed_multiplier = 0.8
             },
             effect = {effects.all_effects[1]},
             permanent_effects = {effects.permanent_effects[2]},
             locked = false,
             description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
+        }, {
+            name = "Full Moon Sword",
+            type = "Attack",
+            base_damage = 15,
+            stamina = 40,
+            slots = 2,
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0.35,
+                holy = 0.15
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1.1,
+                weak_multiplier = 1.1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {effects.permanent_effects[5]},
+            locked = false,
+            description = "Conjure a blade of holy moonlight. This technique draws from both the holy faith of the user as well as their arcane knowledge of the elements. Has a chance to inflict an HP draining effect on the target.\nScaling: Medium arcane, low holy"
         }, {
             name = "Vital Stab",
             type = "Attack",

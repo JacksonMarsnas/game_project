@@ -11,7 +11,7 @@ function Augmentation_Screen:draw()
     augment_header:setFilter( "nearest", "nearest" )
     augment_text:setFilter( "nearest", "nearest" )
     love.graphics.setFont(augment_header)
-    love.graphics.printf("SELECT YOUR AUGMENTATIONS", 0, 128, 960, "center")
+    love.graphics.printf("SELECT YOUR AUGMENTATIONS", 0, 128, window_width, "center")
     love.graphics.setFont(augment_text)
 
     self:setup_table(augment_text)
@@ -32,7 +32,7 @@ function Augmentation_Screen:setup_table(augment_text)
 
         if index == 1 then
             table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
-            x = 480,
+            x = window_width / 2,
             y = 192 + index * 64,
             id = index,
             all_info = augment,
@@ -40,7 +40,7 @@ function Augmentation_Screen:setup_table(augment_text)
         })
         else
             table.insert(augment_list, {text = love.graphics.newText(augment_text, augment["name"] .. " - " .. augment["heavy_description"]),
-            x = 480,
+            x = window_width / 2,
             y = augment_list[index - 1]["y"] + augment_list[index - 1]["height"] + 32,
             id = index,
             all_info = augment,

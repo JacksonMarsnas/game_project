@@ -53,6 +53,8 @@ function Map:transport()
             player.current_y_tile = player.y / 64 + 1
             all_maps[portal.next_map]:setup_enemies()
             player:line_of_sight(player.current_x_tile, player.current_y_tile, 0)
+            player.mega_map_x = portal.next_mega_map_x
+            player.mega_map_y = portal.next_mega_map_y
         end
     end
 end
