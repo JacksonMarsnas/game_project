@@ -6,6 +6,94 @@ function Moves:new()
 
     self.all_moves = {
         {
+            name = "Slam",
+            type = "Attack",
+            base_damage = 10,
+            stamina = 20,
+            slots = 2,
+            scaling = {
+                strength = 0.4,
+                skill = 0,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "Slam the target with a blunt weapon. Simple, yet effective.\nScalng: Medium strength"
+        }, {
+            name = "Slash",
+            type = "Attack",
+            base_damage = 10,
+            stamina = 20,
+            slots = 2,
+            scaling = {
+                strength = 0,
+                skill = 0.4,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "Slash the target with a small blade. Despite its simplicity, this technique is in the arsenal of all skilled warriors who use a blade.\nScaling: Medium skill"
+        }, {
+            name = "Arcane Weapon",
+            type = "Attack",
+            base_damage = 10,
+            stamina = 20,
+            slots = 2,
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0.4,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "A technique which conjures a hammer made from magic compounds. Such weapons gain strength from the bearer's arcane knowledge rather than their physical ability.\nScaling: Medium arcane"
+        }, {
+            name = "Blessed Hammer",
+            type = "Attack",
+            base_damage = 10,
+            stamina = 20,
+            slots = 2,
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0,
+                holy = 0.4
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "Swing at the foe with a hammer blessed in holy ritual. Such a weapon improves in effectiveness if its wielder has a high holy devotion; a sign of god's blessing.\nScaling: Medium holy"
+        }, {
             name = "Plow Through",
             type = "Attack",
             base_damage = 20,
@@ -28,14 +116,14 @@ function Moves:new()
             locked = false,
             description = "A technique that uses the full weight of the body to smash into the target. Exceptionally powerful indeed, yet it often injures the user and leaves them completely exhausted.\nScaling: High strength"
         }, {
-            name = "Stab",
+            name = "Vital Stab",
             type = "Attack",
             base_damage = 10,
             stamina = 20,
             slots = 2,
             scaling = {
-                strength = 0.2,
-                skill = 0.5,
+                strength = 0,
+                skill = 0.35,
                 arcane = 0,
                 holy = 0
             },
@@ -48,8 +136,8 @@ function Moves:new()
             effect = {effects.all_effects[1], effects.all_effects[1]},
             permanent_effects = {},
             locked = false,
-            description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill, low strength"
-        },{
+            description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill"
+        }, {
             name = "Ice Ray",
             type = "Ranged",
             base_damage = 5,
