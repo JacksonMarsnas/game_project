@@ -160,6 +160,28 @@ function Moves:new()
             locked = false,
             description = "A very simple technique. Stab the target with a blade. While this technique does not deal very much damage on its own, it has a much larger window for critical hits compared to most techniques.\nScaling: Medium skill"
         }, {
+            name = "Hidden Dagger",
+            type = "Attack",
+            base_damage = 5,
+            stamina = 15,
+            slots = 2,
+            scaling = {
+                strength = 0,
+                skill = 0.1,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1.1,
+                normal_multiplier = 0.75,
+                weak_multiplier = 0.5,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1], effects.all_effects[1]},
+            permanent_effects = {effects.permanent_effects[6]},
+            locked = false,
+            description = "Pull a hidden dagger coated with deadly toxins from your armour. While it does poor damage, the target is left poisoned for a very long time, dealing great damage. Techniques like this are prized by criminals.\nScaling: Low skill"
+        }, {
             name = "Ice Ray",
             type = "Ranged",
             base_damage = 5,
@@ -239,6 +261,75 @@ function Moves:new()
             locked = true,
             description = "An extremely powerful yet dangerous spell. The damage of this spell is equal to half of the player's remaining health. However, this spell is exhausting to use, using enough stamina to leave the caster on the brink of death.\nScaling: none"
         }, {
+            name = "Shortbow",
+            type = "Ranged",
+            base_damage = 10,
+            stamina = 35,
+            slots = 1,
+            range = 2,
+            scaling = {
+                strength = 0,
+                skill = 0.25,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 1.1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 0.95
+            },
+            effect = {effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "Use a shortbow to shoot the enemy. Not spectacular, but still effective.\nScaling: Medium skill"
+        }, {
+            name = "Greatbow",
+            type = "Ranged",
+            base_damage = 15,
+            stamina = 50,
+            slots = 1,
+            range = 2,
+            scaling = {
+                strength = 0.3,
+                skill = 0,
+                arcane = 0,
+                holy = 0
+            },
+            multipliers = {
+                crit_multiplier = 0.9,
+                normal_multiplier = 1,
+                weak_multiplier = 1.1,
+                speed_multiplier = 1.05
+            },
+            effect = {effects.all_effects[1]},
+            permanent_effects = {},
+            locked = false,
+            description = "Shoot the enemy with a greatbow using massive arrows. Such a large bow requires great strength to use, but is effective if used properly.\nScaling: Medium strength"
+        }, {
+            name = "Holy Lightning",
+            type = "Ranged",
+            base_damage = 10,
+            stamina = 40,
+            slots = 1,
+            range = 2,
+            scaling = {
+                strength = 0,
+                skill = 0,
+                arcane = 0,
+                holy = 0.3
+            },
+            multipliers = {
+                crit_multiplier = 1,
+                normal_multiplier = 1,
+                weak_multiplier = 1,
+                speed_multiplier = 1
+            },
+            effect = {effects.all_effects[1]},
+            permanent_effects = {effects.permanent_effects[7]},
+            locked = false,
+            description = "Call on god to strike the foe with holy lightning. This spell has a chance to stun the target for a short time, making them easier to block and land attacks on.\nScaling: Medium holy"
+        }, {
             name = "Fast Reflexes",
             type = "Buff",
             base_buff = self.buffs["fast_reflexes"],
@@ -272,8 +363,32 @@ function Moves:new()
                 effects.all_effects[1]
             },
             permanent_effects = {},
-            locked = true,
+            locked = false,
             description = "A simple spell that bolsters defenses. While not very exciting, it has low cost and a long duration, making it quite a favourable spell.\nScaling: Low holy"
+        }, {
+            name = "Combat Stance",
+            type = "Buff",
+            base_buff = self.buffs["combat_stance"],
+            stamina = 40,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            locked = false,
+            description = "Assume a combat stance to greatly increase combat related stats for one turn. Stance uses a large amount of stamina, but is offset with a drastic boost in defense.\nScaling: High skill, low strength"
+        }, {
+            name = "Enchant Weapon",
+            type = "Buff",
+            base_buff = self.buffs["enchant_weapon"],
+            stamina = 30,
+            slots = 1,
+            effect = {
+                effects.all_effects[1]
+            },
+            permanent_effects = {},
+            locked = false,
+            description = "Cast a spell to reinforce your techniques with arcane power for a short time. The duration and effectiveness is based on the caster's knowledge of the arcane.\nScaling: Medium arcane"
         }, {
             name = "Burn",
             type = "Debuff",
@@ -358,6 +473,46 @@ function Moves:create_buffs()
             recurring_buff = function() end,
             revert = function()
                 player.resilience = player.base_resilience
+            end
+        }, combat_stance = {
+            code = "STN",
+            duration = function()
+                return 2
+            end,
+            buff = function()
+                player.resilience = player.resilience + (0.4 * player.skill) + (0.2 * player.strength)
+                player.arcane = player.arcane + (0.4 * player.skill) + (0.2 * player.strength)
+                player.holy = player.holy + (0.4 * player.skill) + (0.2 * player.strength)
+                player.agility = player.agility + (0.4 * player.skill) + (0.2 * player.strength)
+                player.strength = player.strength + (0.4 * player.skill) + (0.2 * player.strength)
+                player.skill = player.skill + (0.4 * player.skill) + (0.2 * player.strength)
+            end,
+            recurring_buff = function() end,
+            revert = function()
+                player.resilience = player.base_resilience
+                player.strength = player.base_strength
+                player.skill = player.base_skill
+                player.arcane = player.base_arcane
+                player.holy = player.base_holy
+                player.agility = player.base_agility
+            end
+        }, enchant_weapon = {
+            code = "ENC",
+            duration = function()
+                return 3 + math.floor(0.1 * player.arcane)
+            end,
+            buff = function()
+                player.holy = player.holy + (0.3 * player.arcane)
+                player.strength = player.strength + (0.3 * player.arcane)
+                player.skill = player.skill + (0.3 * player.arcane)
+                player.arcane = player.arcane + (0.3 * player.arcane)
+            end,
+            recurring_buff = function() end,
+            revert = function()
+                player.holy = player.base_holy
+                player.strength = player.base_strength
+                player.skill = player.base_skill
+                player.arcane = player.base_arcane
             end
         }
     }

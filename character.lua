@@ -177,7 +177,7 @@ function Character:draw_navbar()
     love.graphics.print(self.attacks[self.current_weapon]["type"], 300, 940)
     love.graphics.setFont(effect_font)
     for index, buff in ipairs(self.active_buffs) do
-        love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, window_width)
+        love.graphics.print(buff["code"] .. ":" .. buff["duration"], (index - 1) * 72 + 20, 960)
     end
 end
 
@@ -455,6 +455,7 @@ function Character:buff_used()
     for index, buff in ipairs(self.active_buffs) do
         if self.attacks[self.current_weapon]["base_buff"]["name"] == buff["name"] then
             buff_used = true
+            love.graphics.setColor(1, 0, 0)
         end
     end
     if buff_used == false then

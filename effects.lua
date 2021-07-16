@@ -255,8 +255,8 @@ function Effects:permanent_effects()
             name = "Full Moon Sword",
             effect_function = function(enemy) 
                 if math.random(5) == 5 then
-                    self:insert_debuff(8, function(enemy) end, "Great Blade of Moonlight", enemy, function() 
-                        enemy.health = enemy.health - math.floor(enemy.max_health / 20)
+                    self:insert_debuff(4, function(enemy) end, "Great Blade of Moonlight", enemy, function() 
+                        enemy.health = enemy.health - math.floor(enemy.max_health / 10)
                         if enemy.health <= 0 then
                             enemy.animation_state = "dead"
                             enemy.health = 0
@@ -267,6 +267,38 @@ function Effects:permanent_effects()
                 end
             end,
             description = "Effect: %HP-",
+        }, {
+            name = "Hidden Dagger",
+            effect_function = function(enemy) 
+                self:insert_debuff(10, function(enemy) end, "Hidden Dagger", enemy, function() 
+                    enemy.health = enemy.health - math.floor(enemy.max_health / 15)
+                    if enemy.health <= 0 then
+                        enemy.animation_state = "dead"
+                        enemy.health = 0
+                        occupation_map[enemy.current_y][enemy.current_x] = false
+                        player.experience = player.experience + enemy["exp_drop"]
+                    end
+                end)
+            end,
+            description = "Effect: HP-",
+        }, {
+            name = "Holy Lightning",
+            effect_function = function(enemy) 
+                if 3 == 3 then
+                    if self:insert_debuff(3 + math.floor(player.holy / 15), 
+                    function(enemy) 
+                        enemy.agility = enemy.base_agility
+                        enemy.blocking = enemy.base_blocking
+                    end, 
+                    "Holy Lightning", enemy, function() end) == true then
+                        enemy.base_agility = enemy.agility
+                        enemy.base_blocking = enemy.blocking
+                        enemy.agility = enemy.agility - (player.holy * 0.5)
+                        enemy.blocking = enemy.blocking - (player.holy * 0.5)
+                    end
+                end
+            end,
+            description = "Effect: HP-",
         }
     }
 end
